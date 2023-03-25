@@ -1,0 +1,204 @@
+n = 5
+x_Vandermonde: [[1.000000000003371]
+ [0.999999999988564]
+ [1.000000000014461]
+ [0.999999999991921]
+ [1.000000000001683]]
+x_Hilbert: [[0.999999999999958]
+ [1.000000000000608]
+ [0.999999999997841]
+ [1.000000000002778]
+ [0.999999999998814]]
+cond_Vandermonde: 357402.3578250121
+cond_Hilbert: 476607.25024224253
+pertub A
+epsilon: 1e-10
+True error in x_Vandermonde: 2.0747506758407414e-07
+Upper bound on error in x_Vandermonde: 4.21181405125292e-06
+True error in x_Hilbert: 5.1182012785343365e-06
+Upper bound on error in x_Hilbert: 3.014863248834257e-05
+epsilon: 1e-08
+True error in x_Vandermonde: 2.0748520199085747e-05
+Upper bound on error in x_Vandermonde: 0.00042135709822223387
+True error in x_Hilbert: 0.00051159656151841
+Upper bound on error in x_Hilbert: 0.003023888693616297
+epsilon: 1e-06
+True error in x_Vandermonde: 0.0020739972020449257
+Upper bound on error in x_Vandermonde: 0.0439698851193247
+True error in x_Hilbert: 0.04902041702940888
+Upper bound on error in x_Hilbert: 0.43159257105067234
+pertub b
+1e-10
+True error in x_Vandermonde: 2.0749915634271915e-07
+Upper bound on error in x_Vandermonde: 2.00033715397687e-06
+True error in x_Hilbert: 5.118220494956206e-06
+Upper bound on error in x_Hilbert: 1.5186893558879971e-05
+1e-08
+True error in x_Vandermonde: 2.0748624613503377e-05
+Upper bound on error in x_Vandermonde: 0.00020003371539768699
+True error in x_Hilbert: 0.0005118221751020322
+Upper bound on error in x_Hilbert: 0.0015186893558879972
+1e-06
+True error in x_Vandermonde: 0.0020748613856724153
+Upper bound on error in x_Vandermonde: 0.020003371539768697
+True error in x_Hilbert: 0.05118221741987732
+Upper bound on error in x_Hilbert: 0.15186893558879971
+n = 7
+x_Vandermonde: [[1.000000000327996]
+ [0.999999998445129]
+ [1.000000003053949]
+ [0.999999996818709]
+ [1.000000001853838]
+ [0.999999999426969]
+ [1.00000000007341 ]]
+x_Hilbert: [[0.99999999999142 ]
+ [1.000000000344197]
+ [0.999999996671239]
+ [1.000000012978864]
+ [0.999999976151635]
+ [1.000000020645263]
+ [0.99999999321103 ]]
+cond_Vandermonde: 87385014.41077216
+cond_Hilbert: 475367356.37688667
+pertub A
+epsilon: 1e-10
+True error in x_Vandermonde: 3.1903354431103393e-06
+Upper bound on error in x_Vandermonde: 0.00028951412067390494
+True error in x_Hilbert: 0.0021009248479530135
+Upper bound on error in x_Hilbert: 0.029063865899940568
+epsilon: 1e-08
+True error in x_Vandermonde: 0.00031930925701413994
+Upper bound on error in x_Vandermonde: 0.029805699998992054
+True error in x_Hilbert: 0.18931239185363707
+Upper bound on error in x_Hilbert: 1.271952305141433e+16
+epsilon: 1e-06
+True error in x_Vandermonde: 0.0318872676174315
+Upper bound on error in x_Vandermonde: 2.8943032650742975
+True error in x_Hilbert: 1.7383486117135045
+Upper bound on error in x_Hilbert: 1.271952305141433e+18
+pertub b
+1e-10
+True error in x_Vandermonde: 3.195681126938579e-06
+Upper bound on error in x_Vandermonde: 0.00013690316623338314
+True error in x_Hilbert: 0.002103230254726571
+Upper bound on error in x_Hilbert: 0.012388888369310996
+1e-08
+True error in x_Vandermonde: 0.0003193175253622961
+Upper bound on error in x_Vandermonde: 0.013690316623338314
+True error in x_Hilbert: 0.21032431596329537
+Upper bound on error in x_Hilbert: 1.2388888369310995
+1e-06
+True error in x_Vandermonde: 0.03193156019061016
+Upper bound on error in x_Vandermonde: 1.3690316623338312
+True error in x_Hilbert: 21.03243283758936
+Upper bound on error in x_Hilbert: 123.88888369310993
+n = 9
+x_Vandermonde: [[1.000000017160485]
+ [0.99999989593641 ]
+ [1.000000274529314]
+ [0.999999588502794]
+ [1.000000383300866]
+ [0.999999772803795]
+ [1.000000083685435]
+ [0.999999982486507]
+ [1.000000001594395]]
+x_Hilbert: [[0.999999999739731]
+ [1.000000017846458]
+ [0.999999699370956]
+ [1.000002138149489]
+ [0.999992180856694]
+ [1.000015925996639]
+ [0.999981747520659]
+ [1.000011005406591]
+ [0.999997284938154]]
+cond_Vandermonde: 22739097820.560867
+cond_Hilbert: 493153908709.8829
+pertub A
+epsilon: 1e-10
+True error in x_Vandermonde: 3.280100388257417e-05
+Upper bound on error in x_Vandermonde: 0.013323947385558374
+True error in x_Hilbert: 0.7280494324102961
+Upper bound on error in x_Hilbert: 1.2648802838132606e+17
+epsilon: 1e-08
+True error in x_Vandermonde: 0.003302936657610764
+Upper bound on error in x_Vandermonde: 1.3148754078036964
+True error in x_Hilbert: 3.1999349285746934
+Upper bound on error in x_Hilbert: 1.2648802838132605e+19
+epsilon: 1e-06
+True error in x_Vandermonde: 0.32952063251939107
+Upper bound on error in x_Vandermonde: 131.4875407803696
+True error in x_Hilbert: 3.3123992441914702
+Upper bound on error in x_Hilbert: 1.2648802838132606e+21
+pertub b
+1e-10
+True error in x_Vandermonde: 3.347238957144398e-05
+Upper bound on error in x_Vandermonde: 0.0068078605383985556
+True error in x_Hilbert: 0.9330365646141353
+Upper bound on error in x_Hilbert: 11.115858001500207
+1e-08
+True error in x_Vandermonde: 0.0033034982437881544
+Upper bound on error in x_Vandermonde: 0.6807860538398556
+True error in x_Hilbert: 93.30457137560923
+Upper bound on error in x_Hilbert: 1111.5858001500208
+1e-06
+True error in x_Vandermonde: 0.3303381639013454
+Upper bound on error in x_Vandermonde: 68.07860538398555
+True error in x_Hilbert: 9330.458013126745
+Upper bound on error in x_Hilbert: 111158.58001500208
+n = 11
+x_Vandermonde: [[1.000000135481147]
+ [0.9999990217426  ]
+ [1.000003159364746]
+ [0.999993990594603]
+ [1.000007454819069]
+ [0.999993698061657]
+ [1.000003676458908]
+ [0.999998538455699]
+ [1.000000378930383]
+ [0.999999942139673]
+ [1.000000003951513]]
+x_Hilbert: [[0.99999999426252 ]
+ [1.000000600531996]
+ [0.999984414648462]
+ [1.000174365626841]
+ [0.998960437778418]
+ [1.003657803210378]
+ [0.99202971230566 ]
+ [1.010873560531675]
+ [0.990961835728683]
+ [1.004184308940751]
+ [0.999172962796598]]
+cond_Vandermonde: 6518464403264.314
+cond_Hilbert: 522443374827019.2
+pertub A
+epsilon: 1e-10
+True error in x_Vandermonde: 0.0002790105933034465
+Upper bound on error in x_Vandermonde: 0.7863626057142292
+True error in x_Hilbert: 5.948260413013939
+Upper bound on error in x_Hilbert: 1.2985318293487446e+20
+epsilon: 1e-08
+True error in x_Vandermonde: 0.025613585036909775
+Upper bound on error in x_Vandermonde: 44.020323936406136
+True error in x_Hilbert: 6.030325437297513
+Upper bound on error in x_Hilbert: 1.2985318293487445e+22
+epsilon: 1e-06
+True error in x_Vandermonde: 2.5549228656825727
+Upper bound on error in x_Vandermonde: 4402.032393640613
+True error in x_Hilbert: 6.031157530566685
+Upper bound on error in x_Hilbert: 1.2985318293487443e+24
+pertub b
+1e-10
+True error in x_Vandermonde: 0.00016344698145380915
+Upper bound on error in x_Vandermonde: 0.24864092607012764
+True error in x_Hilbert: 432.3258722401791
+Upper bound on error in x_Hilbert: 10513.65832991033
+1e-08
+True error in x_Vandermonde: 0.025665984717112712
+Upper bound on error in x_Vandermonde: 24.864092607012765
+True error in x_Hilbert: 43233.09746071647
+Upper bound on error in x_Hilbert: 1051365.8329910329
+1e-06
+True error in x_Vandermonde: 2.5619744386873107
+Upper bound on error in x_Vandermonde: 2486.4092607012763
+True error in x_Hilbert: 4323310.2387649035
+Upper bound on error in x_Hilbert: 105136583.29910327

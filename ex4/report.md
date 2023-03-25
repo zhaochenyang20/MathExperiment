@@ -19,7 +19,7 @@
 $$
 ma(t)=mv'(t)=F-cv(t) \Leftrightarrow \frac{dv}{dt}=\frac{F-cv}{m}
 $$
-由于题目关心的是在特定距离时的速度，所以考虑把左式变成 $\frac{dv}{dx}$，得：
+由于题目关心的是在特定距离时的速度，所以考虑把左式变成 $\dfrac{dv}{dx}$，得：
 $$
 \frac{dv}{dx}v=\frac{F}{m}-\frac{c}{m}v
 $$
@@ -33,7 +33,7 @@ $$
 $$
 **数值解**
 
-​	该微分方程进一步转化为 $\dfrac{dv}{dx}=\dfrac{\alpha}{v}-\beta$，此时无法直接带入初值条件 $x=0$ 时 $v=0$。考虑 $\dfrac{dv}{dx}v=\dfrac{d(\dfrac{v^2}{2})}{dx}$，于是令 $V=\dfrac{v^2}{2}$，那么有 $\dfrac{dV}{dx}=\dfrac{dv}{dx}v$，同时由于在模型中 $v\geq 0$ 恒成立故有 $v=\sqrt{2V}$，因此原微分方程可转化为 $\dfrac{dV}{dx}=\alpha-\beta \sqrt{2V}$，当 $x=0$ 时 $V=0$ 故 $\dfrac{dV}{dx}|_{x=0}=\alpha$。有了初值条件和 $\dfrac{dV}{dx}$ 的显式表达式，可以直接用求该方程的数值解（容易观察该微分方程不是刚性方程），得到 $x=91.44$ 时的 $V$ 进而得到 $v$。
+该微分方程进一步转化为 $\dfrac{dv}{dx}=\dfrac{\alpha}{v}-\beta$，此时无法直接带入初值条件 $x=0$ 时 $v=0$。考虑 $\dfrac{dv}{dx}v=\dfrac{d(\dfrac{v^2}{2})}{dx}$，于是令 $V=\dfrac{v^2}{2}$，那么有 $\dfrac{dV}{dx}=\dfrac{dv}{dx}v$，同时由于在模型中 $v\geq 0$ 恒成立故有 $v=\sqrt{2V}$，因此原微分方程可转化为 $\dfrac{dV}{dx}=\alpha-\beta \sqrt{2V}$，当 $x=0$ 时 $V=0$ 故 $\dfrac{dV}{dx}|_{x=0}=\alpha$。有了初值条件和 $\dfrac{dV}{dx}$ 的显式表达式，可以直接用求该方程的数值解（容易观察该微分方程不是刚性方程），得到 $x=91.44$ 时的 $V$ 进而得到 $v$。
 
 **解析解**
 
@@ -41,9 +41,7 @@ $$
 $$
 \alpha x+\frac{\alpha}{\beta}v+\frac{\alpha^2}{\beta^2}\ln(1-\frac{\beta}{\alpha}v)=0
 $$
-代入 $x=91.44$ 之后，只余下有 $v$ 一个变量，求解该方程，同时再手动舍去不符合实际意义的解。
-
-[TODO]
+代入 $x=91.44$ 之后，只余下有 $v$ 一个变量，求解该方程，同时再手动舍去不符合实际意义的解即可。
 
 ### 代码
 
@@ -84,11 +82,34 @@ Answer3 = float(solve(eqn, v)[0])
 print(Answer3)
 ```
 
+由于解析解的计算利用 Python 较为缓慢，计算量较大，故而下方程序给出对应的 Matlab 代码，位于 `./code/4_5.m` 下：
+
+```matlab
+format long
+F = 253.86549552;
+c = 1.16674;
+m = 239.245;
+alpha = F / m;
+beta = c / m;
+
+xspan = [0 91.44];
+[x, V] = ode45(@(x, V) alpha - beta * sqrt(2.0 * V), xspan, 0);
+Answer1 = sqrt(2.0 * V(end))
+
+syms v(x);
+eqn = diff(v, x) * v == alpha - beta * v;
+cond = v(0) == 0;
+vSol(x) = dsolve(eqn, cond);
+Answer2 = double(vSol(91.44))
+
+syms v;
+eqn = alpha * 91.44 + alpha / beta * v + (alpha^2.0) / (beta^2.0) * log(1 - beta / alpha * v) == 0;
+Answer3 = double(solve(eqn, v))
+```
+
 ### 结果、分析与结论
 
 `Answer1`求得的结果为`13.634709965823346`，`Answer2`求得的结果为`13.634710040497453`，`Answer3`求得的结果为`13.634710040497746`，这三者都可四舍五入保留五位小数得到同样的结果`13.63471`，因此该结果可以被视为一个相对可靠的答案。而为了让桶不破裂的速度上限 $40\text{ ft/s}=12.192\text{ m/s}$，无论如何都小于最终的速度，因此桶会破裂。
-
-[TODO]
 
 可以看到，在本例中数值方法求解常微分方程的结果是可靠的。事实上在本例中，求解析解的时候也不可避免地使用一些数值方法。
 
@@ -118,9 +139,9 @@ $$
 $$
 \dfrac{dx}{dy}=\frac{v_1\sqrt{x^2+(d-y)^2}-v_2x}{v_2(d-y)}
 $$
-令 $p=\frac{x}{d-y}$，有：
+令 $p=\dfrac{x}{d-y}$，有：
 $$
-(d-y)\frac{dp}{dy}=k\sqrt{1+p^2}-p
+(d-y)\dfrac{dp}{dy}=k\sqrt{1+p^2}
 $$
 同时初值条件为 $p=0$（当 $x=0$ 时） 时 $y=0$，用分离变量法可以得到：
 $$
@@ -130,9 +151,6 @@ $$
 $$
 x=\frac{d-y}{2}(d^k(d-y)^{-k}-d^{-k}(d-y)^k)(0\leq y <d,k>=0)
 $$
-
-
-[TODO]
 
 事实上通过这个解可以得到，当 $k>1$ 时（即水速大于船速时），$\lim_{y\rightarrow d^-}x=+\infin$，说明小船永远无法到达 $B$ 点；当 $k=1$ 时（即水速等于船速时），$\lim_{y\rightarrow d^-}x=\frac{d}{2}$，同样无法达到 $B$ 点；当 $0\leq k<1$ 时，$\lim_{y\rightarrow d^-}x=0$，说明小船可以到达 $B$ 点。这个简单分析的结果和实际情况是完全符合的。
 
