@@ -10,8 +10,10 @@ SAVE_START = 1000
 SAVE_DURATION = 256
 TOTAL_ITER = SAVE_START + SAVE_DURATION
 
+
 def equ(q, c):
     return (1 - R) * q + R / D * (c - math.atan(MU * q))
+
 
 def compute_q_values():
     q = np.zeros((11000, TOTAL_ITER))
@@ -23,6 +25,7 @@ def compute_q_values():
         index += 1
     return q
 
+
 def find_forks(q):
     cur_n = 1
     for index in range(q.shape[0]):
@@ -31,7 +34,10 @@ def find_forks(q):
         while n <= 128:
             conv_fail = True
             for i in range(n):
-                if abs(q[index, SAVE_START + i] - q[index, SAVE_START + n + i]) >= THRESHOLD:
+                if (
+                    abs(q[index, SAVE_START + i] - q[index, SAVE_START + n + i])
+                    >= THRESHOLD
+                ):
                     conv_fail = False
                     break
             if conv_fail:
@@ -41,12 +47,14 @@ def find_forks(q):
                 break
             n = n * 2
 
+
 def plot_q_values(q):
     x = np.arange(0.0, 1.1, 0.0001)
-    plt.plot(x, q[:, SAVE_START: TOTAL_ITER])
-    plt.xlabel('Parameter: c')
-    plt.ylabel('Value: q')
+    plt.plot(x, q[:, SAVE_START:TOTAL_ITER])
+    plt.xlabel("Parameter: c")
+    plt.ylabel("Value: q")
     plt.show()
+
 
 if __name__ == "__main__":
     q = compute_q_values()

@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+from scipy.integrate import simps
 
 np.set_printoptions(precision=15)
 
@@ -12,14 +13,5 @@ all_x = np.arange(0, 15.1, 0.1)
 all_y1 = interp1d(x, y1, kind="cubic")(all_x)
 all_y2 = interp1d(x, y2, kind="cubic")(all_x)
 
-with open("./3_10_result.txt", "w") as f:
-    for i in range(len(all_x)):
-        f.write(
-            f"y1({all_x[i]:.1f}) = {all_y1[i]:.15f}   y2({all_x[i]:.1f}) = {all_y2[i]:.15f}\n"
-        )
-
-plt.plot(all_x, all_y1, all_x, all_y2)
-plt.legend(["y1", "y2"])
-plt.show()
-
 print("The area of the fitted area is " + str(np.trapz(all_y1 - all_y2, all_x)))
+print("The area of the fitted area is " + str(simps(all_y1 - all_y2, all_x)))
