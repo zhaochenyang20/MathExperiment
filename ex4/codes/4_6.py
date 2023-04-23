@@ -36,6 +36,8 @@ x = pos[:, 0]
 y = pos[:, 1]
 plt.subplot(1, 2, 1)
 plt.plot(t, x, t, y)
+plt.xlabel('t')
+plt.ylabel('x / y')
 plt.legend(["x", "y"])
 
 analytic_x = (d - y) / 2.0 * (d ** k * (d - y) ** (-k) - d ** (-k) * (d - y) ** k)
