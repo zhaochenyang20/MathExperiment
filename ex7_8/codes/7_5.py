@@ -118,18 +118,30 @@ distance = np.array(
     ]
 )
 
+def construct_points(vector, length, selection, dimension):
+    x_coords = []
+    y_coords = []
+    for i in range(length):
+        if selection[i][dimension] == 1:
+            x_coords.append(0)
+            y_coords.append(0)
+        elif selection[i][dimension] == 2:
+            x_coords.append(0)
+            y_coords.append(vector[0])
+        else:
+            x_coords.append(vector[2 * selection[i][dimension] - 5])
+            y_coords.append(vector[2 * selection[i][dimension] - 4])
+    return np.array(x_coords), np.array(y_coords)
+
 
 def objective(X):
     global num_iteration
     num_iteration += 1
-    xi = X[((index[:, 0] > 2) * (index[:, 0] * 2 - 5)) + ((index[:, 0] == 2) * 0)]
-    yi = X[((index[:, 0] > 2) * (index[:, 0] * 2 - 4)) + ((index[:, 0] == 2) * 0)]
-    xj = X[((index[:, 1] > 2) * (index[:, 1] * 2 - 5)) + ((index[:, 1] == 2) * 0)]
-    yj = X[((index[:, 1] > 2) * (index[:, 1] * 2 - 4)) + ((index[:, 1] == 2) * 0)]
+    xi, yi = construct_points(X, index.shape[0], index, 0)
+    xj, yj = construct_points(X, index.shape[0], index, 1)
     distances = np.sqrt((xi - xj) ** 2.0 + (yi - yj) ** 2.0)
     F = np.sum((distances - distance) ** 2.0)
     return F
-
 
 minX = np.zeros(25 * 2 - 2 - 1)
 minVal = objective(minX)

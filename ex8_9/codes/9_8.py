@@ -2,9 +2,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.optimize import Bounds, minimize
 
-method = "SLSQP"
-
-
 price = np.array(
     [
         [1.300, 1.225, 1.149, 1.050],
@@ -21,22 +18,17 @@ price = np.array(
         [1.176, 1.715, 1.908, 1.050],
     ]
 )
-
+conmission_rate = 0.01
+x_0 = [0.5, 0.35, 0.15]
 expectation = np.mean(price, axis=0)
-
-
 convariance = np.cov(price, rowvar=False)
-
-
 lower_earning_rate = 0.10
 upper_earning_rate = np.max(expectation) - 1  # possible to be broken
 step_earning_rate = 0.01
 earning_rates = np.arange(lower_earning_rate, upper_earning_rate, step_earning_rate)
 
 
-
 def x2var(x, n):
-    # pdprint(type(n))
     return x.dot(convariance[:n, :n]).dot(x)
 
 
@@ -44,7 +36,30 @@ def func_con_bond_earning(x, nbonds, earning_rate):
     return np.sum(x * expectation[:nbonds]) - (1.0 + earning_rate)
 
 
-def without_exchange(nbonds, earning_rate):
+def exchange(nbonds, earning_rate):
+    cons_switch = [
+        {
+            "type": "ineq",
+            "fun": lambda bs: func_con_switch_earning(bs, nbonds, earning_rate),
+        },
+        {"type": "ineq", "fun": func_con_switch},
+        {"type": "ineq", "fun": convert_bs_to_x},
+    ]
+
+    bs_0 = np.zeros(6)
+    bounds = Bounds(np.zeros(6), np.ones(6))
+    result = minimize(
+        bs2var,
+        bs_0,
+        args=(nbonds,),
+        method="SLSQP",
+        constraints=cons_switch,
+        bounds=bounds,
+    )
+    return result.x, result.fun
+
+
+def without_switch(nbonds, earning_rate):
     x_0 = np.random.rand(nbonds)
     con_normalize = {"type": "eq", "fun": lambda x: np.sum(x) - 1}
     con_earning_rate = {
@@ -54,90 +69,60 @@ def without_exchange(nbonds, earning_rate):
     }
     contraints = [con_normalize, con_earning_rate]
     bnds = Bounds(np.zeros(nbonds), np.ones(nbonds))
-
     res = minimize(
-        x2var, x_0, args=(nbonds,), method=method, constraints=contraints, bounds=bnds
+        x2var, x_0, args=(nbonds,), method="SLSQP", constraints=contraints, bounds=bnds
     )
-
-    x = res.x
-    var = res.fun
-    return x, var
+    return res.x, res.fun
 
 
-def devide_bs(bs):
-    bs = bs.reshape((2, 3))
-    b = bs[0]
-    s = bs[1]
+def divide_bs(bs):
+    bs_reshaped = bs.reshape((2, 3))
+    b = bs_reshaped[0]
+    s = bs_reshaped[1]
     return b, s
 
 
-conmission_rate = 0.01
-x_0 = [0.5, 0.35, 0.15]
-
-
-def bs2x(bs):
-    b, s = devide_bs(bs)
+def convert_bs_to_x(bs):
+    b, s = divide_bs(bs)
     x = x_0 + (1 - conmission_rate) * b - s
     return x
 
 
 def bs2var(bs, nbonds):
-    x = bs2x(bs)
-    return x2var(x, nbonds)  # no need to normalize
+    x = convert_bs_to_x(bs)
+    return x2var(x, nbonds)
 
 
-def func_con_exchange(bs):
-    b, s = devide_bs(bs)
+def func_con_switch(bs):
+    b, s = divide_bs(bs)
     return (1 - conmission_rate) * np.sum(s) - np.sum(b)
 
 
-def func_con_exchange_earning(bs, nbonds, earning_rate):
-    x = bs2x(bs)
-    return func_con_bond_earning(x, nbonds, earning_rate) + func_con_exchange(bs)
+def func_con_switch_earning(bs, nbonds, earning_rate):
+    x = convert_bs_to_x(bs)
+    return func_con_bond_earning(x, nbonds, earning_rate) + func_con_switch(bs)
 
 
-def exchange(nbonds, earning_rate):
-    con_earning_rate = {
-        "type": "ineq",
-        "fun": func_con_exchange_earning,
-        "args": [nbonds, earning_rate],
-    }
-    con_exchange = {"type": "ineq", "fun": func_con_exchange}
-    con_ratio_not_negative = {"type": "ineq", "fun": bs2x}
-    cons_exchange = [con_earning_rate, con_exchange, con_ratio_not_negative]
-
-    bs_0 = np.zeros(6)
-    bnds = Bounds(np.zeros(6), np.ones(6))
-    res_exchange = minimize(
-        bs2var,
-        bs_0,
-        args=(nbonds),
-        method=method,
-        constraints=cons_exchange,
-        bounds=bnds,
-    )
-    bs = res_exchange.x
-    var = res_exchange.fun
-    return bs, var
-
-
-def iterate_earning_rates(nbonds=3, portfolio_func=without_exchange):
-    decisions = []
-    vars = []
+def optimization(nbonds=3, portfolio_func=without_switch):
+    bond_decisions = []
+    variances = []
 
     for earning_rate in earning_rates:
-        decision, var = portfolio_func(nbonds, earning_rate)
-        decisions.append(decision)
-        vars.append(var)
+        bond_decision, variance = portfolio_func(
+            nbonds=nbonds, earning_rate=earning_rate
+        )
+        bond_decisions.append(bond_decision)
+        variances.append(variance)
 
-    decisions = np.array(decisions)
-    vars = np.array(vars)
-    return decisions, vars
+    bond_decisions = np.array(bond_decisions)
+    variances = np.array(variances)
+
+    return bond_decisions, variances
 
 
-
-def print_devider(idx):
-    print(f"===== ({idx}) =====")
+def optimaize(nbonds, earning_rate, portfolio_func):
+    x_opt, var_opt = portfolio_func(nbonds, earning_rate)
+    return x_opt, var_opt
 
 
 def plot_xs(xs, labels):
@@ -147,51 +132,77 @@ def plot_xs(xs, labels):
     ax.legend()
     fig.show()
 
-x_opt_3, var_opt_3 = without_exchange(3, 0.15)
 
-x_opt_4, var_opt_4 = without_exchange(4, 0.15)
-
-bs_opt_exchange, var_opt_exchange = exchange(3, 0.15)
-bs_opt_exchange = bs_opt_exchange.round(2)
-b_opt_exchange, s_opt_exchange = devide_bs(bs_opt_exchange)
-x_opt_exchange = bs2x(bs_opt_exchange)
-x_opt_exchange_norm = x_opt_exchange / np.sum(x_opt_exchange)
-
-xs_opt_3, vars_opt_3 = iterate_earning_rates(3)
-xs_opt_4, vars_opt_4 = iterate_earning_rates(4)
-bss_opt_exchange, vars_opt_exchange = iterate_earning_rates(3, exchange)
-xs_opt_exchange = np.array([bs2x(bs) for bs in bss_opt_exchange])
+def plot_optimal_earnings(earning_rates, xs_list, vars_list, labels):
+    _, ax = plt.subplots()
+    for _, var, label in zip(xs_list, vars_list, labels):
+        ax.plot(earning_rates, var, label=label)
+    ax.legend()
+    plt.show()
 
 
-print_devider(1)
-
-print("[Optimal Solution] x = ", x_opt_3)
-print("[Optimal Objective] v = ", var_opt_3)
-plot_xs(xs_opt_3, ["A", "B", "C"])
+def optimaize(nbonds, earning_rate, portfolio_func):
+    bond_decision, var = portfolio_func(nbonds, earning_rate)
+    return bond_decision, var
 
 
-print_devider(2)
+def run_experiment():
+    """Run an experiment and print the results.
 
-print("[Optimal Solution] x = ", x_opt_4)
-print("[Optimal Objective] v = ", var_opt_4)
-plot_xs(xs_opt_4, ["A", "B", "C", "D"])
+    This code defines a function run_experiment that calls several other functions
+    to get optimal solutions for different scenarios, divide them into two variables,
+    and normalize them. It then calls plot_xs and plot_optimal_earnings to visualize
+    the results. The code is likely part of a larger project that involves optimization
+    and visualization of financial data.
+    """
+    x_A_B_C, var_A_B_C = optimaize(3, 0.15, without_switch)
+    x_All, var_All = optimaize(4, 0.15, without_switch)
+    bs_switch, var_switch = optimaize(3, 0.15, exchange)
+    b_switch, s_switch = divide_bs(bs_switch)
+    x_switch = convert_bs_to_x(bs_switch)
+    xs_A_B_C, vars_A_B_C = optimization(3)
+    xs_A_B_C_D, vars_A_B_C_D = optimization(4)
+    bss_switch, vars_switch = optimization(3, exchange)
+    xs_switch = np.array([convert_bs_to_x(bs) for bs in bss_switch])
+    cost = 1 - np.sum(x_switch)
 
-print_devider(3)
+    print("================================================")
+    print("x = ", x_A_B_C)
+    print("v = ", var_A_B_C)
+    plot_xs(xs_A_B_C, ["A", "B", "C"])
 
-print("[Optimal Solution] b = ", b_opt_exchange, ", s =", s_opt_exchange)
-print(
-    "[Optimal Solution] x_org = ",
-    x_opt_exchange,
-    "=> x_norm =",
-    x_opt_exchange_norm,
-)
-print("[Optimal Objective] v = ", var_opt_exchange)
-plot_xs(xs_opt_exchange, ["A", "B", "C"])
+    print("================================================")
+    print("x = ", x_All)
+    print("v = ", var_All)
+    plot_xs(xs_A_B_C_D, ["A", "B", "C", "D"])
 
-plt.rcParams.update({"lines.linestyle": "--"})
-fig, ax = plt.subplots()
-ax.plot(earning_rates, vars_opt_3, label="A+B+C")
-ax.plot(earning_rates, vars_opt_4, label="A+B+C+D")
-ax.plot(earning_rates, vars_opt_exchange, label="A+B+C (exchange)")
-ax.legend()
-fig.show()
+    print("================================================")
+    print("b = ", b_switch)
+    print("s = ", s_switch)
+    print("x = ", x_switch)
+    print("v = ", var_switch)
+    print("cost = ", cost)
+    plot_xs(xs_switch, ["A", "B", "C"])
+
+    plot_optimal_earnings(
+        earning_rates,
+        [xs_A_B_C],
+        [vars_A_B_C],
+        ["A+B+C"],
+    )
+    plot_optimal_earnings(
+        earning_rates,
+        [xs_A_B_C_D],
+        [vars_A_B_C_D],
+        ["A+B+C+D"],
+    )
+    plot_optimal_earnings(
+        earning_rates,
+        [xs_switch],
+        [vars_switch],
+        ["A+B+C (exchange)"],
+    )
+
+
+if __name__ == "__main__":
+    run_experiment()
