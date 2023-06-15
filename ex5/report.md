@@ -71,7 +71,7 @@ def main(n):
         A1[n - 1, n - 1] += epsilon
         x1 = np.linalg.solve(A1, b_Vandermonde)
         true_error1 = np.linalg.norm(x1 - x) / np.linalg.norm(x)
-        frac = epsilon / np.linalg.norm(A_Vandermonde)
+        frac = epsilon / np.linalg.norm(A_Vandermonde, 2)
         if cond_Vandermonde * frac < 1:
             upper_error1 = cond_Vandermonde * frac / (1 - cond_Vandermonde * frac)
         else:
@@ -80,11 +80,11 @@ def main(n):
         A2[n - 1, n - 1] += epsilon
         x2 = np.linalg.solve(A2, b_Hilbert)
         true_error2 = np.linalg.norm(x2 - x) / np.linalg.norm(x)
-        frac = epsilon / np.linalg.norm(A_Hilbert)
+        frac = epsilon / np.linalg.norm(A_Hilbert, 2)
         if cond_Hilbert * frac < 1:
             upper_error2 = cond_Hilbert * frac / (1 - cond_Hilbert * frac)
         else:
-            upper_error2 = cond_Hilbert * frac / np.finfo(float).eps
+            upper_error2 = cond_Hilbert * frac
         print("True error in x_Vandermonde:", true_error1)
         print("Upper bound on error in x_Vandermonde:", upper_error1)
         print("True error in x_Hilbert:", true_error2)
@@ -100,7 +100,7 @@ def main(n):
         x1 = np.linalg.solve(A_Vandermonde, b1)
         # Compute true and upper error for x1
         true_error1 = np.linalg.norm(x1 - x) / np.linalg.norm(x)
-        upper_error1 = cond_Vandermonde * epsilon / np.linalg.norm(b_Vandermonde)
+        upper_error1 = cond_Vandermonde * epsilon / np.linalg.norm(b_Vandermonde, 2)
         # Perturb b_Hilbert
         b2 = b_Hilbert.copy()
         b2[-1, 0] += epsilon
@@ -108,7 +108,7 @@ def main(n):
         x2 = np.linalg.solve(A_Hilbert, b2)
         # Compute true and upper error for x2
         true_error2 = np.linalg.norm(x2 - x) / np.linalg.norm(x)
-        upper_error2 = cond_Hilbert * epsilon / np.linalg.norm(b_Hilbert)
+        upper_error2 = cond_Hilbert * epsilon / np.linalg.norm(b_Hilbert, 2)
         print("True error in x_Vandermonde:", true_error1)
         print("Upper bound on error in x_Vandermonde:", upper_error1)
         print("True error in x_Hilbert:", true_error2)
@@ -223,7 +223,7 @@ for epsilon in [10 ** (-10.0), 10 ** (-8.0), 10 ** (-6.0)]:
 
 概括而言，Jacobi 迭代法和 Gauss-Seidel 迭代法都是通过取一个初始向量 $x^{0}$，然后迭代得到 $x^{k+1}$ 直到迭代误差 $\Vert x^{(k+1)}-x^{(k)}\Vert$ 小于预先给定的误差 $error$。Jacobi 迭代法的迭代公式为 $x^{(k+1)}=D^{-1}((L+U)x^{(k)}+b)$，Gauss-Seidel 迭代法的迭代公式为 $x^{(k+1)}=(D-L)^{-1}(Ux^{(k)}+b)$。这两个方法都可以写成 $x^{(k+1)}=Bx^{(k)}+f$ 的形式，因此在实现时可以写一个通用的框架。在本次实现中，我分别实现了这两种迭代方法。
 
-从理论上分析，题目中给定的矩阵 $A$ 满足**严格对角占优**，即 $\forall i\geq1,\vert A_{ij}\vert>\sum_{j\neq i}\vert A_{ij}\vert$。因此， Jacobi 迭代法和 Gauss-Seide l迭代法都收敛。
+从理论上分析，题目中给定的矩阵 $A$ 满足**严格对角占优**，即 $\forall i\geq1,\vert A_{ij}\vert>\sum_{j\neq i}\vert A_{ij}\vert$。因此， Jacobi 迭代法和 Gauss-Seidel迭代法都收敛。
 
 ### 代码
 
@@ -234,7 +234,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def jacobi(D, L, U, x_0, b, error):
+def split_matrix(A):
+    n = A.shape[0]  # 方阵的维度
+    D = np.diag(np.diag(A))  # 对角矩阵
+    L = -np.tril(A, k=-1)  # 严格下三角矩阵
+    U = -np.triu(A, k=1)  # 严格上三角矩阵
+    
+    return D, L, U
+
+
+def jacobi(A, x_0, b, error):
+    D, L, U = split_matrix(A)
     inv_D = np.linalg.inv(D)
     k = 0
     xk = x_0
@@ -246,7 +256,8 @@ def jacobi(D, L, U, x_0, b, error):
         xk = xk_1
 
 
-def gauss_seidel(D, L, U, x_0, b, error):
+def gauss_seidel(A, x_0, b, error):
+    D, L, U = split_matrix(A)
     inv_D_minus_L = np.linalg.inv(D - L)
     k = 0
     xk = x_0
@@ -256,7 +267,6 @@ def gauss_seidel(D, L, U, x_0, b, error):
             return xk_1, k + 1
         k += 1
         xk = xk_1
-
 
 n = 20
 A = (
@@ -274,35 +284,35 @@ error = 1e-8
 
 b = np.zeros((20, 1))
 x_0 = np.zeros((20, 1))
-result, iteration = jacobi(D, L, U, x_0, b, error)
+result, iteration = jacobi(A, x_0, b, error)
 print("jacobi      ", iteration)
-result, iteration = gauss_seidel(D, L, U, x_0, b, error)
+result, iteration = gauss_seidel(A, x_0, b, error)
 print("gauss_seidel", iteration)
 
 x_0 = np.ones((20, 1))
-result, iteration = jacobi(D, L, U, x_0, b, error)
+result, iteration = jacobi(A, x_0, b, error)
 print("jacobi      ", iteration)
-result, iteration = gauss_seidel(D, L, U, x_0, b, error)
+result, iteration = gauss_seidel(A, x_0, b, error)
 print("gauss_seidel", iteration)
 
 b = np.arange(1, 21).reshape(20, 1)
 x_0 = np.linalg.solve(A, b)
-result, iteration = jacobi(D, L, U, x_0, b, error)
+result, iteration = jacobi(A, x_0, b, error)
 print("jacobi      ", iteration)
-result, iteration = gauss_seidel(D, L, U, x_0, b, error)
+result, iteration = gauss_seidel(A, x_0, b, error)
 print("gauss_seidel", iteration)
 
 for perturb in [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1]:
     x_0 += perturb * np.ones((20, 1))
-    result, iteration = jacobi(D, L, U, x_0, b, error)
+    result, iteration = jacobi(A, x_0, b, error)
     print("jacobi      ", perturb, iteration)
-    result, iteration = gauss_seidel(D, L, U, x_0, b, error)
+    result, iteration = gauss_seidel(A, x_0, b, error)
     print("gauss_seidel", perturb, iteration)
 
 x_0 = np.zeros((20, 1))
-result, iteration = jacobi(D, L, U, x_0, b, error)
+result, iteration = jacobi(A, x_0, b, error)
 print("jacobi      ", iteration)
-result, iteration = gauss_seidel(D, L, U, x_0, b, error)
+result, iteration = gauss_seidel(A, x_0, b, error)
 print("gauss_seidel", iteration)
 
 jacobi_iterations = np.zeros(100)
@@ -319,9 +329,9 @@ for d in range(1, 101):
         + np.diag(np.ones(n - 2) * -0.25, -2)
     )
     D = np.diag(np.diag(A))
-    result, iteration = jacobi(D, L, U, x_0, b, error)
+    result, iteration = jacobi(A, x_0, b, error)
     jacobi_iterations[d - 1] = iteration
-    result, iteration = gauss_seidel(D, L, U, x_0, b, error)
+    result, iteration = gauss_seidel(A, x_0, b, error)
     gauss_seidel_iterations[d - 1] = iteration
 
 plt.plot(range(1, 101), jacobi_iterations, label="Jacobi")
