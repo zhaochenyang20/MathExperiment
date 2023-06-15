@@ -174,3 +174,49 @@ step 0.014587358828084485
 ```
 
 收敛，是对角占优矩阵。
+
+# 2
+
+$x^2 y^{\prime \prime}+x y^{\prime}+\left(x^2-\frac{1}{4}\right) y=0, \quad y\left(\frac{\pi}{2}\right)=2, \quad y^{\prime}\left(\frac{\pi}{2}\right)=-\frac{2}{\pi}$
+
+试用数值方法求 $y\left(\frac{\pi}{6}\right)=$ (保留小数点后 5 位数字)
+
+首先，将二阶微分方程转化为一组一阶微分方程：
+
+$$
+\begin{aligned}
+y_{1} &=y \\
+y_{2} &=y^{\prime} \\
+y_{1}^{\prime} &=y_{2} \\
+y_{2}^{\prime} &=-\frac{x y_{2}+\left(x^{2}-\frac{1}{4}\right) y_{1}}{x^{2}}
+\end{aligned}
+$$
+
+```python
+import numpy as np
+from scipy.integrate import odeint
+
+def f(y, x):
+    """
+    定义二阶微分方程
+
+    :param y: 因变量
+    :param x: 自变量
+    :return: 二阶微分方程的值
+    """
+    return [y[1], -(x * y[1] + (x ** 2 - 1/4) * y[0]) / (x ** 2)]
+
+# 初始条件
+y_a = [2, -2/np.pi]
+
+# 自变量范围
+x = np.linspace(np.pi/2, np.pi/6, 100)
+
+# 求解微分方程
+y = odeint(f, y_a, x)
+
+# 输出结果
+print(round(y[-1, 0], 5))
+```
+
+1.73205
