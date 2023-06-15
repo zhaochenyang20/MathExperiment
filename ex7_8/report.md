@@ -424,39 +424,39 @@ A = np.array([[0, -1, -1, -1, 0, 0],
               [2 - 1.4, 2 - 1.4, 1 - 1.4, 1 - 1.4, 5 - 1.4, 0],
               [9 - 5, 15 - 5, 4 - 5, 3 - 5, 2 - 5, 0],
               [1, 1, 1, 1, 1, 0],
-              [0, 0, 0, 0, 0, -1]])
-b = np.array([-400, 0, 0, 1000, 0])
+             ])
+b = np.array([-400, 0, 0, 1000,])
+# 将 x_2 + x_3 + x_4 >= 400 转为 -(x_2 + x_3 + x_4) <= -400
 lb = np.array([0, 0, 0, 0, 0, 0])
+ub = np.array([1000, 1000, 1000, 1000, 1000, 0])
 f = -np.array([4.3, 5.4 * 0.5, 5.0 * 0.5, 4.4 * 0.5, 4.5, 0]) / 100
 
 # First optimization problem
-res1 = linprog(f, A, b, bounds=list(zip(lb, [None]*6)))
+res1 = linprog(f, A, b, bounds=list(zip(lb, ub)))
 _print_(res1.x)
 print("interest: ", -res1.fun)
 
 # Second optimization problem
 constrain = A.copy()
-constrain[0, 5] = 0.0
-constrain[1, 5] = 0.0
-constrain[2, 5] = 0.0
 constrain[3, 5] = -1.0
-lb[5] = 0.0
+# x_1 + x_2 + x_3 + x_4 + x_5 - k <= 1000
 ub = [1000, 1000, 1000, 1000, 1000, 100]
-res = linprog(f, constrain, b, bounds=list(zip(lb, ub)))
+new_f = -np.array([4.3, 5.4 * 0.5, 5.0 * 0.5, 4.4 * 0.5, 4.5, -2.75]) / 100
+res = linprog(new_f, constrain, b, bounds=list(zip(lb, ub)))
 _print_(res.x)
 print("interest: ", -res.fun)
 
 # Third optimization problem
 f2 = f.copy()
 f2[0] = -4.5 / 100
-res = linprog(f2, A, b, bounds=list(zip(lb, [None]*6)))
+res = linprog(f2, A, b, bounds=list(zip(lb, ub)))
 _print_(res.x)
 print("interest: ", -res.fun)
 
 # Fourth optimization problem
 f3 = f.copy()
 f3[2] = -4.8 * 0.5 / 100
-res = linprog(f3, A, b, bounds=list(zip(lb, [None]*6)))
+res = linprog(f3, A, b, bounds=list(zip(lb, ub)))
 _print_(res.x)
 print("interest: ", -res.fun)
 ```
@@ -468,8 +468,8 @@ print("interest: ", -res.fun)
 ```python
 x1: 218.1818181818182, x2: 0.0, x3: 736.3636363636364, x4: 0.0, x5: 45.45454545454543, k: 0.0
 interest:  29.836363636363636
-x1: 240.0, x2: 0.0, x3: 810.0, x4: 0.0, x5: 49.99999999999997, k: 100.0
-interest:  32.81999999999999
+x1: 240.0, x2: 0.0, x3: 810.0000000000001, x4: 0.0, x5: 50.00000000000001, k: 100.0
+interest:  30.07
 x1: 218.1818181818182, x2: 0.0, x3: 736.3636363636364, x4: 0.0, x5: 45.45454545454543, k: 0.0
 interest:  30.272727272727273
 x1: 335.99999999999994, x2: 0.0, x3: 0.0, x4: 648.0, x5: 15.999999999999982, k: 0.0
@@ -480,7 +480,7 @@ interest:  29.424
 
 第一问中，第一问中，最优解下的 $x_1,x_2,x_3,x_4,x_5$ 分别是 $218.18$、$0$、$736.36$、$0$、$45.45$（单位均为万元），最大收益约为 $29.84$ 万元。此时，约束条件符合松弛变量为 0，最优值时各个变量取值的受到了正确的约束。
 
-第二问中，最优解下的 $x_1,x_2,x_3,x_3,x_4,x_5$ 分别是 $240$、$0$、$810$、$0$、$50$，$k$ 是 $100$，需要额外借款 100 万元，最大收益约为 $32.82$ 万元。此时，约束条件符合松弛变量为 0，最优值时各个变量取值的受到了正确的约束。
+第二问中，最优解下的 $x_1,x_2,x_3,x_3,x_4,x_5$ 分别是 $240$、$0$、$810$、$0$、$50$，$k$ 是 $100$，需要额外借款 100 万元，最大收益约为 $30.07$ 万元。此时，约束条件符合松弛变量为 0，最优值时各个变量取值的受到了正确的约束。
 
 第三问中，第三问中，如果证券 A 的税前收益为 $4.5\%$，则最优解不变，最大收益约为 $30.27$ 万元。如果证券 C 的税前收益改为 $4.8\%$，则最优解下的 $x_1,x_2,x_3,x_4,x_5$ 分别是 $336$、$0$、$0$、$648$、$16$，最大收益约为 $29.42$ 万元。
 

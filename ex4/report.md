@@ -117,7 +117,7 @@ Answer3 = double(solve(eqn, v))
 
 ### 问题分析、模型假设与模型建立
 
-把 $A$ 的正右方向视为 $x$ 轴的正方向（也即水流方 向），正对着 $B$ 点的方向视为 $y$ 轴的正方向，可以建立一个原点为起点 $A$ 、终点为 $(0,d)$ 的平面直角坐标系。当小船在 $(x,y)$ 点时（根据问题背景，必有 $x\geq 0$ 且 $y\geq 0$）， 它的速度由自身船速，指向 $(0,d)$，速率为 $v_2$和水流速度，指向 $x$ 轴正方向，速率为 $v1$ 构成。把其做平行于 $x$ 轴和 $y$ 轴的正交分解，记以 $(x,y)$ 与 $(0,d)$ 为两端点的线段相对于 $x$ 轴的夹角为 $\theta$，满足 $\tan \theta =\dfrac{d-y}{x}$，可以得到方程组：
+把 $A$ 的正右方向视为 $x$ 轴的正方向（也即水流方向），正对着 $B$ 点的方向视为 $y$ 轴的正方向，可以建立一个原点为起点 $A$ 、终点为 $(0,d)$ 的平面直角坐标系。当小船在 $(x,y)$ 点时（根据问题背景，必有 $x\geq 0$ 且 $y\geq 0$）， 它的速度由自身船速，指向 $(0,d)$，速率为 $v_2$和水流速度，指向 $x$ 轴正方向，速率为 $v1$ 构成。把其做平行于 $x$ 轴和 $y$ 轴的正交分解，记以 $(x,y)$ 与 $(0,d)$ 为两端点的线段相对于 $x$ 轴的夹角为 $\theta$，满足 $\tan \theta =\dfrac{d-y}{x}$，可以得到方程组：
 $$
 \begin{cases} \dfrac{dx}{dt}=v_1-v_2\cos\theta \\ \dfrac{dy}{dt}=v_2 \sin \theta \end{cases}
 $$
@@ -168,7 +168,7 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
 d = 100
-v1 = 2.0
+v1 = 1.0
 v2 = 2.0
 k = v1 / v2
 
@@ -232,6 +232,8 @@ def dx_dy(pos, y):
     x, y = pos
     dx_dy = [(v1 * np.sqrt(x ** 2 + (d - y) ** 2) - v2 * x) / (v2 * (d - y)), 1]
     return dx_dy
+  
+#! 其实这里多此一举，上方函数表的并不是 dx_dy，而是 dpos_dy
 
 y = np.linspace(0, 100, 1000)
 pos_init = [0, 0]
