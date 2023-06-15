@@ -133,8 +133,13 @@ def jacobi(A, x0, b, error=1e-6):
     while True:
         k += 1
         xk_1 = inv_D @ ((L + U) @ xk + b)
+        step = np.linalg.norm(xk - xk_1, np.inf)
         xk = xk_1
-        if np.linalg.norm(xk - xk_1, np.inf) < error:
+        print("--------------------")
+        print(f"迭代次数：{k}")
+        print(f"迭代结果：{xk}")
+        print(f"step {step}")
+        if step < error:
             return xk_1, k
 
 
@@ -148,11 +153,10 @@ def gauss_seidel(A, x0, b, error=1e-6):
         xk_1 = inv_D_minus_L @ (U @ xk + b)
         step = np.linalg.norm(xk - xk_1, np.inf)
         xk = xk_1
-        print(k)
-        print(xk)
+        print("--------------------")
+        print(f"迭代次数：{k}")
+        print(f"迭代结果：{xk}")
         print(f"step {step}")
-        if k == 5:
-            return xk, k
         if step < error:
             return xk_1, k
 
@@ -164,7 +168,8 @@ A = np.array([[5, -7, 0, 1],
 
 x0 = np.array([0, 0, 0, 0])
 
-x_5, k = gauss_seidel(A, x0, b)
+x, k = gauss_seidel(A, x0, b)
+x, k = jacobi(A, x0, b)
 ```
 
 ```py
@@ -185,10 +190,8 @@ $x^2 y^{\prime \prime}+x y^{\prime}+\left(x^2-\frac{1}{4}\right) y=0, \quad y\le
 
 $$
 \begin{aligned}
-y_{1} &=y \\
-y_{2} &=y^{\prime} \\
-y_{1}^{\prime} &=y_{2} \\
-y_{2}^{\prime} &=-\frac{x y_{2}+\left(x^{2}-\frac{1}{4}\right) y_{1}}{x^{2}}
+& \frac{dy}{dx} =t \\
+& \frac{dt}{dx} =-\frac{xt +\left(x^{2}-\frac{1}{4}\right) y}{x^{2}}
 \end{aligned}
 $$
 
@@ -196,15 +199,9 @@ $$
 import numpy as np
 from scipy.integrate import odeint
 
-def f(y, x):
-    """
-    定义二阶微分方程
-
-    :param y: 因变量
-    :param x: 自变量
-    :return: 二阶微分方程的值
-    """
-    return [y[1], -(x * y[1] + (x ** 2 - 1/4) * y[0]) / (x ** 2)]
+def dyt_dx(input_list, x):
+		y, t = input_list
+    return [t, -(x * t + (x ** 2 - 1/4) * y) / (x ** 2)]
 
 # 初始条件
 y_a = [2, -2/np.pi]

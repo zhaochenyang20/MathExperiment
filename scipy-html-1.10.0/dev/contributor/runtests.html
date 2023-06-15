@@ -1,0 +1,582 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Running SciPy Tests Locally &#8212; SciPy v1.10.0 Manual</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/versioncheck.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Benchmarking SciPy with airspeed velocity" href="benchmarking.html" />
+    <link rel="prev" title="Contributing to the SciPy documentation" href="rendering_documentation.html" />
+    <script defer data-domain="docs.scipy.org" src="https://views.scientific-python.org/js/script.js"></script>
+    
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../../_static/logo.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../reference/index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown" id="version_switcher">
+    <button type="button" class="btn btn-sm navbar-btn dropdown-toggle" id="version_switcher_button" data-toggle="dropdown">
+        1.10.0  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div id="version_switcher_menu" class="dropdown-menu list-group-flush py-0" aria-labelledby="version_switcher_button">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+
+<!-- NOTE: this JS must live here (not in our global JS file) because it relies
+     on being processed by Jinja before it is run (specifically for replacing
+     variables dev/contributor/runtests and {'json_url': 'https://scipy.github.io/devdocs/_static/version_switcher.json', 'version_match': '1.10.0'}.
+-->
+
+<script type="text/javascript">
+// Check if corresponding page path exists in other version of docs
+// and, if so, go there instead of the homepage of the other docs version
+function checkPageExistsAndRedirect(event) {
+    const currentFilePath = "dev/contributor/runtests.html",
+          tryUrl = event.target.getAttribute("href");
+    let otherDocsHomepage = tryUrl.replace(currentFilePath, "");
+    $.ajax({
+        type: 'HEAD',
+        url: tryUrl,
+        // if the page exists, go there
+        success: function() {
+            location.href = tryUrl;
+        }
+    }).fail(function() {
+        location.href = otherDocsHomepage;
+    });
+    // this prevents the browser from following the href of the clicked node
+    // (which is fine because this function takes care of redirecting)
+    return false;
+}
+
+// Populate the version switcher from the JSON config file
+(function () {
+    $.getJSON("https://scipy.github.io/devdocs/_static/version_switcher.json", function(data, textStatus, jqXHR) {
+        const currentFilePath = "dev/contributor/runtests.html";
+        let btn = document.getElementById("version_switcher_button");
+        // Set empty strings by default so that these attributes exist and can be used in CSS selectors
+        btn.dataset["activeVersionName"] = "";
+        btn.dataset["activeVersion"] = "";
+        // create links to the corresponding page in the other docs versions
+        $.each(data, function(index, entry) {
+            // if no custom name specified (e.g., "latest"), use version string
+            if (!("name" in entry)) {
+                entry.name = entry.version;
+            }
+            // create the node
+            const node = document.createElement("a");
+            node.setAttribute("class", "list-group-item list-group-item-action py-1");
+            node.textContent = `${entry.name}`;
+            node.setAttribute("href", `${entry.url}${currentFilePath}`);
+            // on click, AJAX calls will check if the linked page exists before
+            // trying to redirect, and if not, will redirect to the homepage
+            // for that version of the docs.
+            node.onclick = checkPageExistsAndRedirect;
+            // Add dataset values for the version and name in case people want
+            // to apply CSS styling based on this information.
+            node.dataset["versionName"] = entry.name;
+            node.dataset["version"] = entry.version;
+
+            $("#version_switcher_menu").append(node);
+            // replace dropdown button text with the preferred display name of
+            // this version, rather than using sphinx's 1.10.0 variable.
+            // also highlight the dropdown entry for the currently-viewed
+            // version's entry
+            if (entry.version == "1.10.0") {
+                node.classList.add("active");
+                btn.innerText = btn.dataset["activeVersionName"] = entry.name;
+                btn.dataset["activeVersion"] = entry.version;
+            }
+        });
+    });
+})();
+</script>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/SciPy_team" rel="noopener" target="_blank" title="Twitter"><span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Contributing Information
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../conduct/code_of_conduct.html">
+   SciPy Code of Conduct
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../hacking.html">
+   Ways to Contribute
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../dev_quickstart.html">
+   Contributor quickstart guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="development_workflow.html">
+   Development workflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="contributor_toc.html">
+   SciPy contributor guide
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Roadmap
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../roadmap.html">
+   SciPy Roadmap
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../roadmap-detailed.html">
+   Detailed SciPy Roadmap
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../toolchain.html">
+   Toolchain Roadmap
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  SciPy Organization
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../core-dev/index.html">
+   SciPy Core Developer Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../api-dev/api-dev-toc.html">
+   SciPy API Development Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../governance.html">
+   SciPy Project Governance
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="development_workflow.html">
+   Development workflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="pep8.html">
+   PEP8 and SciPy
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="rendering_documentation.html">
+   Contributing to the SciPy documentation
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Running SciPy Tests Locally
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="benchmarking.html">
+   Benchmarking SciPy with airspeed velocity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cython.html">
+   Adding Cython to SciPy
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="public_cython_api.html">
+   Public Cython APIs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="adding_new.html">
+   Adding New Methods, Functions, and Classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="continuous_integration.html">
+   Continuous Integration
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="using_act.html">
+   <em class="xref py py-obj">
+    act
+   </em>
+   for running GitHub Actions locally
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tips">
+   Tips:
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="running-scipy-tests-locally">
+<span id="runtests"></span><h1>Running SciPy Tests Locally<a class="headerlink" href="#running-scipy-tests-locally" title="Permalink to this heading">#</a></h1>
+<p>Basic test writing and execution from within the Python interpreter is
+documented in the <a class="reference external" href="https://github.com/numpy/numpy/blob/main/doc/TESTS.rst">NumPy/SciPy Testing Guidelines</a>. This page includes
+information about running tests from the command line using SciPy’s
+<code class="docutils literal notranslate"><span class="pre">runtests.py</span></code>, which permits greater control. <em>Note: Before beginning,
+ensure that</em> <a class="reference external" href="https://docs.pytest.org/en/latest/"><code class="docutils literal notranslate"><span class="pre">pytest</span></code></a> <em>is installed.</em></p>
+<p>To run all tests, navigate to the root SciPy directory at the command
+line and execute</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">-v</span></code> activates the <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> option. This builds SciPy (or
+updates an existing build) and runs the tests.</p>
+<p>To run tests on a particular submodule, such as <code class="docutils literal notranslate"><span class="pre">optimize</span></code>, use the
+<code class="docutils literal notranslate"><span class="pre">--submodule</span></code> option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">s</span> <span class="n">optimize</span>
+</pre></div>
+</div>
+<p>To run a particular test module, use the <code class="docutils literal notranslate"><span class="pre">--test</span></code> option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example for <a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/tests/test_linprog.py"><code class="docutils literal notranslate"><span class="pre">scipy/optimize/tests/test_linprog.py</span></code></a> file tests, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span>
+</pre></div>
+</div>
+<p>To run a test class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">TestClass</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example for <code class="docutils literal notranslate"><span class="pre">TestLinprogRSCommon</span></code> class from <code class="docutils literal notranslate"><span class="pre">test_linprog.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span><span class="p">::</span><span class="n">TestLinprogRSCommon</span>
+</pre></div>
+</div>
+<p>To run a particular test:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">test_name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example for <code class="docutils literal notranslate"><span class="pre">test_unknown_solvers_and_options</span></code> from <code class="docutils literal notranslate"><span class="pre">test_linprog.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span><span class="p">::</span><span class="n">test_unknown_solvers_and_options</span>
+</pre></div>
+</div>
+<p>For tests within a class, you need to specify the class name and the test name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">TestClass</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">test_name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">runtests</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span><span class="p">::</span><span class="n">TestLinprogRSCommon</span><span class="p">::</span><span class="n">test_nontrivial_problem_with_guess</span>
+</pre></div>
+</div>
+<p>Other useful options include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--coverage</span></code> to generate a test coverage report in
+<code class="docutils literal notranslate"><span class="pre">scipy/build/coverage/index.html</span></code>. <em>Note:</em> <a class="reference external" href="https://pypi.org/project/pytest-cov/"><code class="docutils literal notranslate"><span class="pre">pytest-cov</span></code></a> <em>must be
+installed.</em></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--doc</span></code> to build the docs in <code class="docutils literal notranslate"><span class="pre">scipy/doc/build</span></code>. By default,
+docs are built only in the <code class="docutils literal notranslate"><span class="pre">html</span></code> format, but you can
+change this by appending the name of the desired format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--refguide-check</span></code> to check whether the objects in a Scipy submodule’s
+<code class="docutils literal notranslate"><span class="pre">__all__</span></code> dict correspond to the objects included in the reference
+guide. It also checks the validity of code samples in docstrings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--bench</span></code> to run all benchmarks. See <a class="reference internal" href="benchmarking.html#benchmarking-with-asv"><span class="std std-ref">Benchmarking SciPy with airspeed velocity</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pep8</span></code> to perform pep8 check.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--mypy</span></code> to run <em>mypy</em> on the codebase.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-n</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-build</span></code> to prevent SciPy from updating the build
+before testing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-j</span></code> or <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> <em>n</em> to engage <em>n</em> cores when building SciPy;
+e.g. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">runtests.py</span> <span class="pre">-j</span> <span class="pre">4</span></code> engages four cores. As of <a class="reference external" href="https://github.com/scipy/scipy/pull/10172">#10172</a>
+this also runs the tests on four cores if <a class="reference external" href="https://pypi.org/project/pytest-xdist/"><code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code></a> is installed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span></code> or <code class="docutils literal notranslate"><span class="pre">--mode</span></code> <code class="docutils literal notranslate"><span class="pre">full</span></code> to run the full test suite, including slow
+tests. For example, <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">runtests.py</span> <span class="pre">-m</span> <span class="pre">full</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--</span></code> to send remaining command line arguments to <code class="docutils literal notranslate"><span class="pre">pytest</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">runtest.py</span></code>. For instance, while <code class="docutils literal notranslate"><span class="pre">-n</span></code> sent to <code class="docutils literal notranslate"><span class="pre">pytest.py</span></code> activates
+the <code class="docutils literal notranslate"><span class="pre">--no-build</span></code> option, <code class="docutils literal notranslate"><span class="pre">-n</span></code> sent to <code class="docutils literal notranslate"><span class="pre">pytest</span></code> runs the tests on
+multiple cores; e.g. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">runtests.py</span> <span class="pre">--</span> <span class="pre">-n</span> <span class="pre">4</span></code> runs tests using
+four cores. <em>Note:</em> <a class="reference external" href="https://pypi.org/project/pytest-xdist/"><code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code></a> <em>must be installed for testing on
+multiple cores.</em></p></li>
+</ul>
+<p>Other options not documented here are listed in the <code class="docutils literal notranslate"><span class="pre">main</span></code> function of
+the source code for <a class="reference external" href="https://github.com/scipy/scipy/blob/main/runtests.py"><code class="docutils literal notranslate"><span class="pre">runtests.py</span></code></a>. For much more information about
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code>, see the <code class="docutils literal notranslate"><span class="pre">pytest</span></code>
+<a class="reference external" href="https://docs.pytest.org/en/latest/usage.html">documentation</a>.</p>
+<section id="tips">
+<h2>Tips:<a class="headerlink" href="#tips" title="Permalink to this heading">#</a></h2>
+<p>If you built SciPy from source but are having trouble running tests
+after a change to the codebase, try deleting the <code class="docutils literal notranslate"><span class="pre">scipy/build</span></code>
+directory. This forces <code class="docutils literal notranslate"><span class="pre">runtest.py</span></code> to completely rebuild SciPy before
+performing tests.</p>
+<p>There is an additional level of very slow tests (several minutes),
+which are disabled even when calling <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">runtests.py</span> <span class="pre">-m</span> <span class="pre">full</span></code>.
+They can be enabled by setting the environment variable <code class="docutils literal notranslate"><span class="pre">SCIPY_XSLOW=1</span></code>
+before running the test suite.</p>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="rendering_documentation.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Contributing to the SciPy documentation</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="benchmarking.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Benchmarking SciPy with airspeed velocity</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2008-2023, The SciPy community.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

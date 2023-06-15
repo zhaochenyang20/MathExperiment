@@ -1,0 +1,498 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Development environment quickstart guide (Docker) &#8212; SciPy v1.10.0 Manual</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/versioncheck.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <script defer data-domain="docs.scipy.org" src="https://views.scientific-python.org/js/script.js"></script>
+    
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../../_static/logo.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../reference/index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown" id="version_switcher">
+    <button type="button" class="btn btn-sm navbar-btn dropdown-toggle" id="version_switcher_button" data-toggle="dropdown">
+        1.10.0  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div id="version_switcher_menu" class="dropdown-menu list-group-flush py-0" aria-labelledby="version_switcher_button">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+
+<!-- NOTE: this JS must live here (not in our global JS file) because it relies
+     on being processed by Jinja before it is run (specifically for replacing
+     variables dev/contributor/quickstart_docker and {'json_url': 'https://scipy.github.io/devdocs/_static/version_switcher.json', 'version_match': '1.10.0'}.
+-->
+
+<script type="text/javascript">
+// Check if corresponding page path exists in other version of docs
+// and, if so, go there instead of the homepage of the other docs version
+function checkPageExistsAndRedirect(event) {
+    const currentFilePath = "dev/contributor/quickstart_docker.html",
+          tryUrl = event.target.getAttribute("href");
+    let otherDocsHomepage = tryUrl.replace(currentFilePath, "");
+    $.ajax({
+        type: 'HEAD',
+        url: tryUrl,
+        // if the page exists, go there
+        success: function() {
+            location.href = tryUrl;
+        }
+    }).fail(function() {
+        location.href = otherDocsHomepage;
+    });
+    // this prevents the browser from following the href of the clicked node
+    // (which is fine because this function takes care of redirecting)
+    return false;
+}
+
+// Populate the version switcher from the JSON config file
+(function () {
+    $.getJSON("https://scipy.github.io/devdocs/_static/version_switcher.json", function(data, textStatus, jqXHR) {
+        const currentFilePath = "dev/contributor/quickstart_docker.html";
+        let btn = document.getElementById("version_switcher_button");
+        // Set empty strings by default so that these attributes exist and can be used in CSS selectors
+        btn.dataset["activeVersionName"] = "";
+        btn.dataset["activeVersion"] = "";
+        // create links to the corresponding page in the other docs versions
+        $.each(data, function(index, entry) {
+            // if no custom name specified (e.g., "latest"), use version string
+            if (!("name" in entry)) {
+                entry.name = entry.version;
+            }
+            // create the node
+            const node = document.createElement("a");
+            node.setAttribute("class", "list-group-item list-group-item-action py-1");
+            node.textContent = `${entry.name}`;
+            node.setAttribute("href", `${entry.url}${currentFilePath}`);
+            // on click, AJAX calls will check if the linked page exists before
+            // trying to redirect, and if not, will redirect to the homepage
+            // for that version of the docs.
+            node.onclick = checkPageExistsAndRedirect;
+            // Add dataset values for the version and name in case people want
+            // to apply CSS styling based on this information.
+            node.dataset["versionName"] = entry.name;
+            node.dataset["version"] = entry.version;
+
+            $("#version_switcher_menu").append(node);
+            // replace dropdown button text with the preferred display name of
+            // this version, rather than using sphinx's 1.10.0 variable.
+            // also highlight the dropdown entry for the currently-viewed
+            // version's entry
+            if (entry.version == "1.10.0") {
+                node.classList.add("active");
+                btn.innerText = btn.dataset["activeVersionName"] = entry.name;
+                btn.dataset["activeVersion"] = entry.version;
+            }
+        });
+    });
+})();
+</script>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/SciPy_team" rel="noopener" target="_blank" title="Twitter"><span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#docker">
+   Docker
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cloning-scipy">
+   Cloning SciPy
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#starting-docker">
+   Starting Docker
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="development-environment-quickstart-guide-docker">
+<span id="quickstart-docker"></span><h1>Development environment quickstart guide (Docker)<a class="headerlink" href="#development-environment-quickstart-guide-docker" title="Permalink to this heading">#</a></h1>
+<p>This document describes how to use a Docker container for your SciPy
+development environment.
+These instructions should be considered a work in progress.</p>
+<section id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this heading">#</a></h2>
+<p>Docker is a program for running Linux virtual machines within a host
+operating system. According to the <a class="reference external" href="https://www.docker.com/resources/what-container">Docker website</a>:</p>
+<blockquote>
+<div><p>A Docker container image is a lightweight, standalone, executable package of
+software that includes everything needed to run an application: code, runtime,
+system tools, system libraries and settings.
+Container images become containers at runtime, and in the case of Docker
+containers - images become containers when they run on Docker Engine.
+Available for both Linux and Windows-based applications, containerized
+software will always run the same, regardless of the host infrastructure.</p>
+</div></blockquote>
+<p>Docker makes setting up a development environment easy and reliable: we
+provide a Docker image with suitable compilers and Scipy’s build-time
+dependencies.
+You can then use the Docker engine to execute the image as a container,
+add the latest development version of SciPy, and build SciPy.</p>
+<p>There are Docker hosts for several OS’s including:
+macOS, Linux, and Windows. Please follow the appropriate
+installation instructions for your operating system at <a class="reference external" href="https://docs.docker.com/install/">docs.docker.com</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have a version of an operating system that doesn’t meet the
+requirements of Docker Desktop, such as Windows 10 Home,
+try <a class="reference external" href="https://docs.docker.com/toolbox/">Docker Toolbox</a> .</p>
+</div>
+</section>
+<section id="cloning-scipy">
+<h2>Cloning SciPy<a class="headerlink" href="#cloning-scipy" title="Permalink to this heading">#</a></h2>
+<p>Before starting SciPy’s Docker container, you should create a copy of the
+SciPy source code on your computer. That way, you’ll be able to access the
+same files both from your native operating system and within the container.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Below we will use <em>terminal window</em> as a
+collective term that includes the Windows Command Prompt.</p>
+</div>
+<ol class="arabic simple">
+<li><p>Browse to the <a class="reference external" href="https://github.com/scipy/scipy">SciPy repository on GitHub</a> and <a class="reference external" href="https://help.github.com/en/articles/fork-a-repo">create your own fork</a>.
+You’ll need to create a GitHub account if you don’t
+already have one.</p></li>
+<li><p>Browse to your fork. Your fork will have a URL like
+<a class="reference external" href="https://github.com/andyfaff/scipy">https://github.com/andyfaff/scipy</a>, except with your GitHub username
+in place of “andyfaff”.</p></li>
+<li><p>Click the big, green “Clone or download” button, and copy the “.git”
+URL to the clipboard. The URL will be the same as your fork’s URL,
+except it will end in “.git”.</p></li>
+<li><p>Create a folder for the SciPy source code in a convenient place on
+your computer. <a class="reference external" href="https://blog.teamtreehouse.com/introduction-to-the-mac-os-x-command-line">Navigate</a> to it in the terminal window.</p></li>
+<li><p>Enter the command <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> followed by your fork’s .git URL.
+Note that this creates in the terminal’s working directory a
+<code class="docutils literal notranslate"><span class="pre">scipy</span></code> folder containing the SciPy source code. This assumes that
+you have a <code class="docutils literal notranslate"><span class="pre">git</span></code> command line client that is available on your
+PATH; if not, you can follow these <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">instructions to install a git client</a>.</p></li>
+</ol>
+</section>
+<section id="starting-docker">
+<h2>Starting Docker<a class="headerlink" href="#starting-docker" title="Permalink to this heading">#</a></h2>
+<p>Instructions for getting started with Docker can be found <a class="reference external" href="https://docs.docker.com/get-started/">here</a>. After
+ensuring that Docker is working correctly, follow the instructions below to
+start a Docker container for SciPy development. You’ll follow the same
+instructions each time you want to start the container, as changes made to a
+container do not persist after you close it.</p>
+<ol class="arabic">
+<li><p>In a terminal window, change the directory (using the <code class="docutils literal notranslate"><span class="pre">cd</span></code> command)
+to the root folder of the SciPy git repository, which contains the file
+<code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p></li>
+<li><p>Ensure that Docker Desktop (or Docker Toolbox) is running, and start up the
+SciPy Docker container by entering the following command in a terminal
+window:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docker run -it --rm -v $PWD/:/home/scipy scipy/scipy-dev:&lt;image-tag&gt;
+</pre></div>
+</div>
+<p>If you are using Windows cmd, you may run the following command instead:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">-</span><span class="n">v</span> <span class="o">%</span><span class="n">cd</span><span class="o">%</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">scipy</span> <span class="n">scipy</span><span class="o">/</span><span class="n">scipy</span><span class="o">-</span><span class="n">dev</span><span class="p">:</span><span class="o">&lt;</span><span class="n">image</span><span class="o">-</span><span class="n">tag</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This command starts (<code class="docutils literal notranslate"><span class="pre">run</span></code>) an interactive (<code class="docutils literal notranslate"><span class="pre">-it</span></code>) Docker container
+named <code class="docutils literal notranslate"><span class="pre">scipy-dev</span></code> (based on Ubuntu focal) from the <code class="docutils literal notranslate"><span class="pre">scipy</span></code>
+<a class="reference external" href="https://cloud.docker.com/repository/docker/scipy/scipy-dev">Docker Hub repository</a>. When the Docker container starts, the
+<code class="docutils literal notranslate"><span class="pre">scipy</span></code> directory from the current directory of the host (<code class="docutils literal notranslate"><span class="pre">$PWD</span></code>) is
+made available in the container as <code class="docutils literal notranslate"><span class="pre">/home/scipy</span></code>. The changes you make
+from the container to any of the files in that directory are also
+visible in the host, and vice versa.</p>
+</li>
+<li><p>You should now be in the container, with something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">base</span><span class="p">)</span> <span class="n">root</span><span class="o">@</span><span class="mf">468e1</span><span class="n">b9564e4</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">scipy</span><span class="c1">#</span>
+</pre></div>
+</div>
+<p>as a prompt. Notice the <code class="docutils literal notranslate"><span class="pre">(base)</span></code> at the beginning, since we are using conda.</p>
+</li>
+<li><p>Activate the <code class="docutils literal notranslate"><span class="pre">scipy-dev</span></code> conda environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">scipy</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+<p>this environment has all the dependencies you’ll need to start using/building SciPy.</p>
+</li>
+<li><p>Initialize git submodules: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">submodule</span> <span class="pre">update</span> <span class="pre">--init</span></code>.</p></li>
+<li><p>Build SciPy by entering:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">build</span>
+</pre></div>
+</div>
+<p>This will compile the C, C++, and Fortran code that comes with SciPy and
+install it in the directory you already have rather than the default
+location for Python packages. We installed <code class="docutils literal notranslate"><span class="pre">python</span></code> with Anaconda.
+<code class="docutils literal notranslate"><span class="pre">dev.py</span></code> is a script in the root directory of SciPy which can be used to
+execute several development tasks (see <a class="reference internal" href="meson.html#the-dev-py-interface"><span class="std std-ref">The dev.py interface</span></a> for
+details).</p>
+</li>
+<li><p>Test the build by entering:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">v</span>
+</pre></div>
+</div>
+<p>This command runs a suite of tests that make sure SciPy is working as it
+should, and <code class="docutils literal notranslate"><span class="pre">-v</span></code> activates the <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> option to show all the test
+output.</p>
+</li>
+<li><p>If you want to <a class="reference internal" href="rendering_documentation.html#rendering-documentation"><span class="std std-ref">build the documentation</span></a>
+or import SciPy from any directory other than the SciPy root, you should
+set up SciPy for development:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">develop</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">.</span></code> refers to the present directory (in this case <code class="docutils literal notranslate"><span class="pre">home/scipy</span></code>).</p>
+</li>
+</ol>
+<p>From here, you can start a Python console (e.g., enter <code class="docutils literal notranslate"><span class="pre">python</span></code>) or
+execute Python scripts from the command line (e.g.,
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">scriptname.py</span></code>).</p>
+<p>You can make changes to files in the <code class="docutils literal notranslate"><span class="pre">scipy</span></code> directory in a text editor/IDE
+in your host OS, and those changes will be reflected
+within the container. Alternatively, you can use the <code class="docutils literal notranslate"><span class="pre">vi</span></code>
+text editor within the container to make changes. No changes made
+within the container are retained when the container is exited; only
+changes made to files/folders within mounted volumes are kept.
+If you would like to contribute changes to the SciPy project, please see
+<a class="reference internal" href="development_workflow.html#development-workflow"><span class="std std-ref">Development workflow</span></a>.</p>
+<p>The Docker image contains all the compilers and dependencies needed for you
+to work on SciPy. The Docker image uses the <a class="reference external" href="https://www.anaconda.com/distribution/">Anaconda Distribution of Python</a>
+to manage the development environment.</p>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2008-2023, The SciPy community.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

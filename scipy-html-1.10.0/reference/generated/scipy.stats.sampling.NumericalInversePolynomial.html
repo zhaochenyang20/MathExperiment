@@ -1,0 +1,966 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>scipy.stats.sampling.NumericalInversePolynomial &#8212; SciPy v1.10.0 Manual</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script src="../../_static/versioncheck.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.stats.sampling.NumericalInversePolynomial.cdf" href="scipy.stats.sampling.NumericalInversePolynomial.cdf.html" />
+    <link rel="prev" title="scipy.stats.sampling.NumericalInverseHermite.u_error" href="scipy.stats.sampling.NumericalInverseHermite.u_error.html" />
+    <script defer data-domain="docs.scipy.org" src="https://views.scientific-python.org/js/script.js"></script>
+    
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../../_static/logo.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown" id="version_switcher">
+    <button type="button" class="btn btn-sm navbar-btn dropdown-toggle" id="version_switcher_button" data-toggle="dropdown">
+        1.10.0  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div id="version_switcher_menu" class="dropdown-menu list-group-flush py-0" aria-labelledby="version_switcher_button">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+
+<!-- NOTE: this JS must live here (not in our global JS file) because it relies
+     on being processed by Jinja before it is run (specifically for replacing
+     variables reference/generated/scipy.stats.sampling.NumericalInversePolynomial and {'json_url': 'https://scipy.github.io/devdocs/_static/version_switcher.json', 'version_match': '1.10.0'}.
+-->
+
+<script type="text/javascript">
+// Check if corresponding page path exists in other version of docs
+// and, if so, go there instead of the homepage of the other docs version
+function checkPageExistsAndRedirect(event) {
+    const currentFilePath = "reference/generated/scipy.stats.sampling.NumericalInversePolynomial.html",
+          tryUrl = event.target.getAttribute("href");
+    let otherDocsHomepage = tryUrl.replace(currentFilePath, "");
+    $.ajax({
+        type: 'HEAD',
+        url: tryUrl,
+        // if the page exists, go there
+        success: function() {
+            location.href = tryUrl;
+        }
+    }).fail(function() {
+        location.href = otherDocsHomepage;
+    });
+    // this prevents the browser from following the href of the clicked node
+    // (which is fine because this function takes care of redirecting)
+    return false;
+}
+
+// Populate the version switcher from the JSON config file
+(function () {
+    $.getJSON("https://scipy.github.io/devdocs/_static/version_switcher.json", function(data, textStatus, jqXHR) {
+        const currentFilePath = "reference/generated/scipy.stats.sampling.NumericalInversePolynomial.html";
+        let btn = document.getElementById("version_switcher_button");
+        // Set empty strings by default so that these attributes exist and can be used in CSS selectors
+        btn.dataset["activeVersionName"] = "";
+        btn.dataset["activeVersion"] = "";
+        // create links to the corresponding page in the other docs versions
+        $.each(data, function(index, entry) {
+            // if no custom name specified (e.g., "latest"), use version string
+            if (!("name" in entry)) {
+                entry.name = entry.version;
+            }
+            // create the node
+            const node = document.createElement("a");
+            node.setAttribute("class", "list-group-item list-group-item-action py-1");
+            node.textContent = `${entry.name}`;
+            node.setAttribute("href", `${entry.url}${currentFilePath}`);
+            // on click, AJAX calls will check if the linked page exists before
+            // trying to redirect, and if not, will redirect to the homepage
+            // for that version of the docs.
+            node.onclick = checkPageExistsAndRedirect;
+            // Add dataset values for the version and name in case people want
+            // to apply CSS styling based on this information.
+            node.dataset["versionName"] = entry.name;
+            node.dataset["version"] = entry.version;
+
+            $("#version_switcher_menu").append(node);
+            // replace dropdown button text with the preferred display name of
+            // this version, rather than using sphinx's 1.10.0 variable.
+            // also highlight the dropdown entry for the currently-viewed
+            // version's entry
+            if (entry.version == "1.10.0") {
+                node.classList.add("active");
+                btn.innerText = btn.dataset["activeVersionName"] = entry.name;
+                btn.dataset["activeVersion"] = entry.version;
+            }
+        });
+    });
+})();
+</script>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/SciPy_team" rel="noopener" target="_blank" title="Twitter"><span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../datasets.html">
+   Datasets (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.datasets
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.contingency.html">
+   Contingency table functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.contingency
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../stats.sampling.html">
+   Random Number Generators (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.sampling
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scipy.stats.sampling.NumericalInversePolynomial">
+   <code class="docutils literal notranslate">
+    <span class="pre">
+     NumericalInversePolynomial
+    </span>
+   </code>
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="scipy-stats-sampling-numericalinversepolynomial">
+<h1>scipy.stats.sampling.NumericalInversePolynomial<a class="headerlink" href="#scipy-stats-sampling-numericalinversepolynomial" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="scipy.stats.sampling.NumericalInversePolynomial">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scipy.stats.sampling.</span></span><span class="sig-name descname"><span class="pre">NumericalInversePolynomial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy.stats.sampling.NumericalInversePolynomial" title="Permalink to this definition">#</a></dt>
+<dd><p>Polynomial interpolation based INVersion of CDF (PINV).</p>
+<p>PINV is a variant of numerical inversion, where the inverse CDF is approximated
+using Newton’s interpolating formula. The interval <code class="docutils literal notranslate"><span class="pre">[0,1]</span></code> is split into several
+subintervals. In each of these, the inverse CDF is constructed at nodes <code class="docutils literal notranslate"><span class="pre">(CDF(x),x)</span></code>
+for some points <code class="docutils literal notranslate"><span class="pre">x</span></code> in this subinterval. If the PDF is given, then the CDF is
+computed numerically from the given PDF using adaptive Gauss-Lobatto integration with
+5 points. Subintervals are split until the requested accuracy goal is reached.</p>
+<p>The method is not exact, as it only produces random variates of the approximated
+distribution. Nevertheless, the maximal tolerated approximation error can be set to
+be the resolution (but, of course, is bounded by the machine precision). We use the
+u-error <code class="docutils literal notranslate"><span class="pre">|U</span> <span class="pre">-</span> <span class="pre">CDF(X)|</span></code> to measure the error where <code class="docutils literal notranslate"><span class="pre">X</span></code> is the approximate
+percentile corressponding to the quantile <code class="docutils literal notranslate"><span class="pre">U</span></code> i.e. <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">=</span> <span class="pre">approx_ppf(U)</span></code>. We call
+the maximal tolerated u-error the u-resolution of the algorithm.</p>
+<p>Both the order of the interpolating polynomial and the u-resolution can be selected.
+Note that very small values of the u-resolution are possible but increase the cost
+for the setup step.</p>
+<p>The interpolating polynomials have to be computed in a setup step. However, it only
+works for distributions with bounded domain; for distributions with unbounded domain
+the tails are cut off such that the probability for the tail regions is small compared
+to the given u-resolution.</p>
+<p>The construction of the interpolation polynomial only works when the PDF is unimodal
+or when the PDF does not vanish between two modes.</p>
+<p>There are some restrictions for the given distribution:</p>
+<ul class="simple">
+<li><p>The support of the distribution (i.e., the region where the PDF is strictly
+positive) must be connected. In practice this means, that the region where PDF
+is “not too small” must be connected. Unimodal densities satisfy this condition.
+If this condition is violated then the domain of the distribution might be
+truncated.</p></li>
+<li><p>When the PDF is integrated numerically, then the given PDF must be continuous
+and should be smooth.</p></li>
+<li><p>The PDF must be bounded.</p></li>
+<li><p>The algorithm has problems when the distribution has heavy tails (as then the
+inverse CDF becomes very steep at 0 or 1) and the requested u-resolution is
+very small. E.g., the Cauchy distribution is likely to show this problem when
+the requested u-resolution is less then 1.e-12.</p></li>
+</ul>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>dist</strong><span class="classifier">object</span></dt><dd><p>An instance of a class with a <code class="docutils literal notranslate"><span class="pre">pdf</span></code> or <code class="docutils literal notranslate"><span class="pre">logpdf</span></code> method,
+optionally a <code class="docutils literal notranslate"><span class="pre">cdf</span></code> method.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pdf</span></code>: PDF of the distribution. The signature of the PDF is expected to be:
+<code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">pdf(self,</span> <span class="pre">x:</span> <span class="pre">float)</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>, i.e., the PDF should accept a Python
+float and return a Python float. It doesn’t need to integrate to 1,
+i.e., the PDF doesn’t need to be normalized. This method is optional,
+but either <code class="docutils literal notranslate"><span class="pre">pdf</span></code> or <code class="docutils literal notranslate"><span class="pre">logpdf</span></code> need to be specified. If both are given,
+<code class="docutils literal notranslate"><span class="pre">logpdf</span></code> is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logpdf</span></code>: The log of the PDF of the distribution. The signature is
+the same as for <code class="docutils literal notranslate"><span class="pre">pdf</span></code>. Similarly, log of the normalization constant
+of the PDF can be ignored. This method is optional, but either <code class="docutils literal notranslate"><span class="pre">pdf</span></code> or
+<code class="docutils literal notranslate"><span class="pre">logpdf</span></code> need to be specified. If both are given, <code class="docutils literal notranslate"><span class="pre">logpdf</span></code> is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cdf</span></code>: CDF of the distribution. This method is optional. If provided, it
+enables the calculation of “u-error”. See <a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.u_error.html#scipy.stats.sampling.NumericalInversePolynomial.u_error" title="scipy.stats.sampling.NumericalInversePolynomial.u_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">u_error</span></code></a>. Must have the same
+signature as the PDF.</p></li>
+</ul>
+</dd>
+<dt><strong>mode</strong><span class="classifier">float, optional</span></dt><dd><p>(Exact) Mode of the distribution. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+<dt><strong>center</strong><span class="classifier">float, optional</span></dt><dd><p>Approximate location of the mode or the mean of the distribution. This location
+provides some information about the main part of the PDF and is used to avoid
+numerical problems. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+<dt><strong>domain</strong><span class="classifier">list or tuple of length 2, optional</span></dt><dd><p>The support of the distribution.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>. When <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<ul class="simple">
+<li><p>If a <code class="docutils literal notranslate"><span class="pre">support</span></code> method is provided by the distribution object
+<em class="xref py py-obj">dist</em>, it is used to set the domain of the distribution.</p></li>
+<li><p>Otherwise the support is assumed to be <span class="math notranslate nohighlight">\((-\infty, \infty)\)</span>.</p></li>
+</ul>
+</dd>
+<dt><strong>order</strong><span class="classifier">int, optional</span></dt><dd><p>Order of the interpolating polynomial. Valid orders are between 3 and 17.
+Higher orders result in fewer intervals for the approximations. Default
+is 5.</p>
+</dd>
+<dt><strong>u_resolution</strong><span class="classifier">float, optional</span></dt><dd><p>Set maximal tolerated u-error. Values of u_resolution must at least 1.e-15 and
+1.e-5 at most. Notice that the resolution of most uniform random number sources
+is 2-32= 2.3e-10. Thus a value of 1.e-10 leads to an inversion algorithm that
+could be called exact. For most simulations slightly bigger values for the
+maximal error are enough as well. Default is 1e-10.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/devdocs/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v1.25.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>,</span></dt><dd><blockquote>
+<div><p><a class="reference external" href="https://numpy.org/devdocs/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v1.25.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</p>
+</div></blockquote>
+<p>A NumPy random number generator or seed for the underlying NumPy random
+number generator used to generate the stream of uniform random numbers.
+If <em class="xref py py-obj">random_state</em> is None (or <em class="xref py py-obj">np.random</em>), the <a class="reference external" href="https://numpy.org/devdocs/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v1.25.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>
+singleton is used.
+If <em class="xref py py-obj">random_state</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">random_state</em>.
+If <em class="xref py py-obj">random_state</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance then
+that instance is used.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rc4fb72882bf2-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Derflinger, Gerhard, Wolfgang Hörmann, and Josef Leydold. “Random variate
+generation by numerical inversion when only the density is known.” ACM
+Transactions on Modeling and Computer Simulation (TOMACS) 20.4 (2010): 1-25.</p>
+</div>
+<div class="citation" id="rc4fb72882bf2-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>UNU.RAN reference manual, Section 5.3.12,
+“PINV – Polynomial interpolation based INVersion of CDF”,
+<a class="reference external" href="https://statmath.wu.ac.at/software/unuran/doc/unuran.html#PINV">https://statmath.wu.ac.at/software/unuran/doc/unuran.html#PINV</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats.sampling</span> <span class="kn">import</span> <span class="n">NumericalInversePolynomial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>To create a generator to sample from the standard normal distribution, do:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">StandardNormal</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">StandardNormal</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">urng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">NumericalInversePolynomial</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">urng</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once a generator is created, samples can be drawn from the distribution by calling
+the <a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.rvs.html#scipy.stats.sampling.NumericalInversePolynomial.rvs" title="scipy.stats.sampling.NumericalInversePolynomial.rvs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rvs</span></code></a> method:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span><span class="o">.</span><span class="n">rvs</span><span class="p">()</span>
+<span class="go">-1.5244996276336318</span>
+</pre></div>
+</div>
+<p>To check that the random variates closely follow the given distribution, we can
+look at it’s histogram:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rvs</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">rvs</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">rvs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fx</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;true distribution&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">rvs</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;random variates&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PDF(x)&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Numerical Inverse Polynomial Samples&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-sampling-NumericalInversePolynomial-1_00_00.png" class="plot-directive" src="../../_images/scipy-stats-sampling-NumericalInversePolynomial-1_00_00.png" />
+</figure>
+<p>It is possible to estimate the u-error of the approximated PPF if the exact
+CDF is available during setup. To do so, pass a <em class="xref py py-obj">dist</em> object with exact CDF of
+the distribution during initialization:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">StandardNormal</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">cdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="n">ndtr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">StandardNormal</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">urng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">NumericalInversePolynomial</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">urng</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, the u-error can be estimated by calling the <a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.u_error.html#scipy.stats.sampling.NumericalInversePolynomial.u_error" title="scipy.stats.sampling.NumericalInversePolynomial.u_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">u_error</span></code></a> method. It runs a
+Monte-Carlo simulation to estimate the u-error. By default, 100000 samples are
+used. To change this, you can pass the number of samples as an argument:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span><span class="o">.</span><span class="n">u_error</span><span class="p">(</span><span class="n">sample_size</span><span class="o">=</span><span class="mi">1000000</span><span class="p">)</span>  <span class="c1"># uses one million samples</span>
+<span class="go">UError(max_error=8.785994154436594e-11, mean_absolute_error=2.930890027826552e-11)</span>
+</pre></div>
+</div>
+<p>This returns a namedtuple which contains the maximum u-error and the mean
+absolute u-error.</p>
+<p>The u-error can be reduced by decreasing the u-resolution (maximum allowed u-error):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">urng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">NumericalInversePolynomial</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">u_resolution</span><span class="o">=</span><span class="mf">1.e-12</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">urng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span><span class="o">.</span><span class="n">u_error</span><span class="p">(</span><span class="n">sample_size</span><span class="o">=</span><span class="mi">1000000</span><span class="p">)</span>
+<span class="go">UError(max_error=9.07496300328603e-13, mean_absolute_error=3.5255644517257716e-13)</span>
+</pre></div>
+</div>
+<p>Note that this comes at the cost of increased setup time.</p>
+<p>The approximated PPF can be evaluated by calling the <a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.ppf.html#scipy.stats.sampling.NumericalInversePolynomial.ppf" title="scipy.stats.sampling.NumericalInversePolynomial.ppf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ppf</span></code></a> method:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.975</span><span class="p">)</span>
+<span class="go">1.9599639857012559</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.975</span><span class="p">)</span>
+<span class="go">1.959963984540054</span>
+</pre></div>
+</div>
+<p>Since the PPF of the normal distribution is available as a special function, we
+can also check the x-error, i.e. the difference between the approximated PPF and
+exact PPF:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">approxppf</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exactppf</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">exactppf</span> <span class="o">-</span> <span class="n">approxppf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;u&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Error between exact and approximated PPF (x-error)&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-sampling-NumericalInversePolynomial-1_01_00.png" class="plot-directive" src="../../_images/scipy-stats-sampling-NumericalInversePolynomial-1_01_00.png" />
+</figure>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.intervals.html#scipy.stats.sampling.NumericalInversePolynomial.intervals" title="scipy.stats.sampling.NumericalInversePolynomial.intervals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intervals</span></code></a></dt><dd><p>Get the number of intervals used in the computation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.cdf.html#scipy.stats.sampling.NumericalInversePolynomial.cdf" title="scipy.stats.sampling.NumericalInversePolynomial.cdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cdf</span></code></a>(x)</p></td>
+<td><p>Approximated cumulative distribution function of the given distribution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.ppf.html#scipy.stats.sampling.NumericalInversePolynomial.ppf" title="scipy.stats.sampling.NumericalInversePolynomial.ppf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ppf</span></code></a>(u)</p></td>
+<td><p>Approximated PPF of the given distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.qrvs.html#scipy.stats.sampling.NumericalInversePolynomial.qrvs" title="scipy.stats.sampling.NumericalInversePolynomial.qrvs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qrvs</span></code></a>([size, d, qmc_engine])</p></td>
+<td><p>Quasi-random variates of the given RV.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.rvs.html#scipy.stats.sampling.NumericalInversePolynomial.rvs" title="scipy.stats.sampling.NumericalInversePolynomial.rvs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rvs</span></code></a>([size, random_state])</p></td>
+<td><p>Sample from the distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.set_random_state.html#scipy.stats.sampling.NumericalInversePolynomial.set_random_state" title="scipy.stats.sampling.NumericalInversePolynomial.set_random_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_random_state</span></code></a>([random_state])</p></td>
+<td><p>Set the underlying uniform random number generator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.stats.sampling.NumericalInversePolynomial.u_error.html#scipy.stats.sampling.NumericalInversePolynomial.u_error" title="scipy.stats.sampling.NumericalInversePolynomial.u_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">u_error</span></code></a>([sample_size])</p></td>
+<td><p>Estimate the u-error of the approximation using Monte Carlo simulation.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="scipy.stats.sampling.NumericalInverseHermite.u_error.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">scipy.stats.sampling.NumericalInverseHermite.u_error</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="scipy.stats.sampling.NumericalInversePolynomial.cdf.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">scipy.stats.sampling.NumericalInversePolynomial.cdf</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2008-2023, The SciPy community.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>
