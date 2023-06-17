@@ -1,0 +1,551 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Development environment quickstart guide (Gitpod) &#8212; SciPy v1.10.0 Manual</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/versioncheck.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <script defer data-domain="docs.scipy.org" src="https://views.scientific-python.org/js/script.js"></script>
+    
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="Logo image">
+    <img src="../../_static/logo.svg" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../reference/index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <div class="dropdown" id="version_switcher">
+    <button type="button" class="btn btn-sm navbar-btn dropdown-toggle" id="version_switcher_button" data-toggle="dropdown">
+        1.10.0  <!-- this text may get changed later by javascript -->
+        <span class="caret"></span>
+    </button>
+    <div id="version_switcher_menu" class="dropdown-menu list-group-flush py-0" aria-labelledby="version_switcher_button">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+</div>
+
+<!-- NOTE: this JS must live here (not in our global JS file) because it relies
+     on being processed by Jinja before it is run (specifically for replacing
+     variables dev/contributor/quickstart_gitpod and {'json_url': 'https://scipy.github.io/devdocs/_static/version_switcher.json', 'version_match': '1.10.0'}.
+-->
+
+<script type="text/javascript">
+// Check if corresponding page path exists in other version of docs
+// and, if so, go there instead of the homepage of the other docs version
+function checkPageExistsAndRedirect(event) {
+    const currentFilePath = "dev/contributor/quickstart_gitpod.html",
+          tryUrl = event.target.getAttribute("href");
+    let otherDocsHomepage = tryUrl.replace(currentFilePath, "");
+    $.ajax({
+        type: 'HEAD',
+        url: tryUrl,
+        // if the page exists, go there
+        success: function() {
+            location.href = tryUrl;
+        }
+    }).fail(function() {
+        location.href = otherDocsHomepage;
+    });
+    // this prevents the browser from following the href of the clicked node
+    // (which is fine because this function takes care of redirecting)
+    return false;
+}
+
+// Populate the version switcher from the JSON config file
+(function () {
+    $.getJSON("https://scipy.github.io/devdocs/_static/version_switcher.json", function(data, textStatus, jqXHR) {
+        const currentFilePath = "dev/contributor/quickstart_gitpod.html";
+        let btn = document.getElementById("version_switcher_button");
+        // Set empty strings by default so that these attributes exist and can be used in CSS selectors
+        btn.dataset["activeVersionName"] = "";
+        btn.dataset["activeVersion"] = "";
+        // create links to the corresponding page in the other docs versions
+        $.each(data, function(index, entry) {
+            // if no custom name specified (e.g., "latest"), use version string
+            if (!("name" in entry)) {
+                entry.name = entry.version;
+            }
+            // create the node
+            const node = document.createElement("a");
+            node.setAttribute("class", "list-group-item list-group-item-action py-1");
+            node.textContent = `${entry.name}`;
+            node.setAttribute("href", `${entry.url}${currentFilePath}`);
+            // on click, AJAX calls will check if the linked page exists before
+            // trying to redirect, and if not, will redirect to the homepage
+            // for that version of the docs.
+            node.onclick = checkPageExistsAndRedirect;
+            // Add dataset values for the version and name in case people want
+            // to apply CSS styling based on this information.
+            node.dataset["versionName"] = entry.name;
+            node.dataset["version"] = entry.version;
+
+            $("#version_switcher_menu").append(node);
+            // replace dropdown button text with the preferred display name of
+            // this version, rather than using sphinx's 1.10.0 variable.
+            // also highlight the dropdown entry for the currently-viewed
+            // version's entry
+            if (entry.version == "1.10.0") {
+                node.classList.add("active");
+                btn.innerText = btn.dataset["activeVersionName"] = entry.name;
+                btn.dataset["activeVersion"] = entry.version;
+            }
+        });
+    });
+})();
+</script>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/SciPy_team" rel="noopener" target="_blank" title="Twitter"><span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gitpod">
+   Gitpod
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gitpod-github-integration">
+   Gitpod GitHub integration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#forking-the-scipy-repository">
+   Forking the SciPy repository
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#starting-gitpod">
+   Starting Gitpod
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#quick-workspace-tour">
+   Quick workspace tour
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#development-workflow">
+   Development workflow
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#rendering-the-scipy-documentation">
+   Rendering the SciPy documentation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-1-using-liveserve">
+     Option 1: Using Liveserve
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-2-using-the-rst-extension">
+     Option 2: Using the rst extension
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#faq-s">
+   FAQ’s
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="development-environment-quickstart-guide-gitpod">
+<span id="quickstart-gitpod"></span><h1>Development environment quickstart guide (Gitpod)<a class="headerlink" href="#development-environment-quickstart-guide-gitpod" title="Permalink to this heading">#</a></h1>
+<p>This quick start guide covers:</p>
+<ul class="simple">
+<li><p>using GitPod for your SciPy development environment</p></li>
+<li><p>creating a personal fork of the SciPy repository on GitHub</p></li>
+<li><p>a quick tour of Gitpod and VSCode</p></li>
+<li><p>working on the SciPy documentation in Gitpod</p></li>
+</ul>
+<section id="gitpod">
+<h2>Gitpod<a class="headerlink" href="#gitpod" title="Permalink to this heading">#</a></h2>
+<p><a class="reference external" href="https://www.gitpod.io/">Gitpod</a>  is an open-source platform for automated and ready-to-code development environments. It enables developers to describe their dev environment as code and start instant and fresh development environments for each new task directly from your browser. This reduces the need to install local development environments and deal with incompatible dependencies.</p>
+</section>
+<section id="gitpod-github-integration">
+<h2>Gitpod GitHub integration<a class="headerlink" href="#gitpod-github-integration" title="Permalink to this heading">#</a></h2>
+<p>To be able to use Gitpod, you will need to have the Gitpod app installed on your GitHub account, so if
+you do not have an account yet, you will need to create one first.</p>
+<p>Head over to the <a class="reference external" href="https://www.gitpod.io/">Gitpod</a> website and click on the <strong>Continue with GitHub</strong> button. You will be redirected to the GitHub authentication page.
+You will then be asked to install the <a class="reference external" href="https://github.com/marketplace/gitpod-io">Gitpod GitHub app</a>.</p>
+<p>Make sure to select <strong>All repositories</strong> access option to avoid issues with permissions later on. Click on the green <strong>Install</strong> button</p>
+<img alt="Gitpod application repository access and installation screenshot - All repositories checked (read and write access)" src="../../_images/installing-gitpod-io.png" />
+<p>This will install the necessary hooks for the integration.</p>
+</section>
+<section id="forking-the-scipy-repository">
+<h2>Forking the SciPy repository<a class="headerlink" href="#forking-the-scipy-repository" title="Permalink to this heading">#</a></h2>
+<p>The best way to work on SciPy as a contributor is by making a fork of the repository first.</p>
+<ol class="arabic simple">
+<li><p>Browse to the <a class="reference external" href="https://github.com/scipy/scipy">SciPy repository on GitHub</a> and <a class="reference external" href="https://help.github.com/en/articles/fork-a-repo">create your own fork</a>.</p></li>
+<li><p>Browse to your fork. Your fork will have a URL like <a class="reference external" href="https://github.com/andyfaff/scipy">https://github.com/andyfaff/scipy</a>, except with your GitHub username in place of “andyfaff”.</p></li>
+</ol>
+</section>
+<section id="starting-gitpod">
+<h2>Starting Gitpod<a class="headerlink" href="#starting-gitpod" title="Permalink to this heading">#</a></h2>
+<p>Once you have authenticated to Gitpod through GitHub, you can install the <a class="reference external" href="https://www.gitpod.io/docs/browser-extension">Gitpod browser extension</a>  which will add a <strong>Gitpod</strong> button next to the <strong>Code</strong> button in the repository:</p>
+<img alt="SciPy repository with Gitpod button screenshot" src="../../_images/scipy-github.png" />
+<ol class="arabic">
+<li><p>If you install the extension - you can click the <strong>Gitpod</strong> button to start a new workspace.</p></li>
+<li><p>Alternatively, if you do not want to install the browser extension you can visit <a class="reference external" href="https://gitpod.io/#https://github.com/USERNAME/scipy">https://gitpod.io/#https://github.com/USERNAME/scipy</a> replacing <code class="docutils literal notranslate"><span class="pre">USERNAME</span></code> with your GitHub username.</p></li>
+<li><p>In both cases, this will open a new tab on your web browser and start building your development environment. Please note this can take a few minutes.</p></li>
+<li><p>Once the build is complete, you will be directed to your workspace, including VSCode and all the dependencies you need to work on SciPy. The first time you start your workspace, you will notice that there might be some actions running. This will ensure that you have a development version of SciPy installed and that the docs are being pre-built for you.</p></li>
+<li><p>Once the build is complete, you can test the build by entering:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>This command make use of Meson, for more details on how this affects your workflow migrating from <code class="docutils literal notranslate"><span class="pre">distutils</span></code> check the <a class="reference internal" href="meson.html#meson"><span class="std std-ref">How to build SciPy with Meson</span></a> section in the Developer documentation.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are a regular VSCode user you can install the Gitpod Remote extension on your local VSCode editor and sync your local editor to the remote Gitpod server. To do this click &lt;kbd&gt; F1 &lt;/kbd&gt; and search for Gitpod open on VSCode.</p>
+</div>
+</div></blockquote>
+</section>
+<section id="quick-workspace-tour">
+<h2>Quick workspace tour<a class="headerlink" href="#quick-workspace-tour" title="Permalink to this heading">#</a></h2>
+<p>Gitpod uses VSCode as the editor. If you have not used this editor before, you can check the Getting started <a class="reference external" href="https://code.visualstudio.com/docs/getstarted/tips-and-tricks">VSCode docs</a> to familiarise yourself with it.</p>
+<p>Your workspace will look similar to the image below:</p>
+<img alt="Gitpod workspace showing the VSCode editor - some parts are highlighted: 1- Python interpreter, 2- Git branch, 3- GitHub Pull Requests extension on the side bar 4- VsCode Marketplace 5- Current directory" src="../../_images/gitpod-workspace.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default VSCode initialises with a light theme, you can change to a dark theme by with the keyboard shortcut <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Cmd</kbd>-<kbd class="kbd docutils literal notranslate">K</kbd> <kbd class="kbd docutils literal notranslate">Cmd</kbd>-<kbd class="kbd docutils literal notranslate">T</kbd></kbd> in Mac or <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">K</kbd> <kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">T</kbd></kbd> in Linux and Windows.</p>
+</div>
+<p>We have marked some important sections in the editor:</p>
+<ol class="arabic simple">
+<li><p>Your current Python interpreter - by default, the <code class="docutils literal notranslate"><span class="pre">scipy-dev</span></code> is marked as <code class="docutils literal notranslate"><span class="pre">base</span></code> on the status bar, but it should be displayed as <code class="docutils literal notranslate"><span class="pre">scipy-dev</span></code> on your terminal. You do not need to activate the conda environment as this will always be activated for you.</p></li>
+<li><p>Your current branch is always displayed in the status bar. You can also use this button to change or create branches.</p></li>
+<li><p>GitHub Pull Requests extension - you can use this to work with Pull Requests from your workspace.</p></li>
+<li><p>Marketplace extensions - we have added some essential extensions to the SciPy Gitpod. Still, you can also install other extensions or syntax highlighting themes for your user, and these will be preserved for you.</p></li>
+<li><p>Your workspace directory - by default is <code class="docutils literal notranslate"><span class="pre">/workspace/scipy</span></code> <strong>do not change this</strong> as this is the only directory preserved in Gitpod.</p></li>
+</ol>
+<p>We have also pre-installed a few tools and VSCode extensions to help with the development experience:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://cli.github.com/">GitHub CLI</a></p></li>
+<li><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=lextudio.restructuredtext">VSCode rst extension</a></p></li>
+<li><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer">VSCode Live server extension</a></p></li>
+<li><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens">VSCode Gitlens extension</a></p></li>
+<li><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=njpwerner.autodocstring">VSCode autodocstrings extension</a></p></li>
+<li><p><a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph">VSCode Git Graph extension</a></p></li>
+</ul>
+</section>
+<section id="development-workflow">
+<h2>Development workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h2>
+<p>The  <a class="reference internal" href="development_workflow.html#development-workflow"><span class="std std-ref">Development workflow</span></a> section of this documentation contains information regarding the SciPy development workflow. Make sure to check this before working on your contributions.</p>
+<p>When using Gitpod, note these main differences with the setup described in <a class="reference internal" href="development_workflow.html#development-workflow"><span class="std std-ref">Development workflow</span></a>.</p>
+<ol class="arabic simple">
+<li><p>You <strong>do not</strong> need to configure your git username, and email as this should be done for you as you authenticated through GitHub. You can check the git configuration with the command <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">config</span> <span class="pre">--list</span></code> in your terminal.</p></li>
+<li><p>As you started your workspace from your own SciPy fork, you will by default have both “upstream” and “origin” added as remotes. You can verify this by typing <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">remote</span></code> on your terminal or by clicking on the <strong>branch name</strong> on the status bar (see image below).</p></li>
+</ol>
+<img alt="Gitpod VSCode editor - git branches dropdown expanded" src="../../_images/scipy-gitpod-branches.png" />
+</section>
+<section id="rendering-the-scipy-documentation">
+<h2>Rendering the SciPy documentation<a class="headerlink" href="#rendering-the-scipy-documentation" title="Permalink to this heading">#</a></h2>
+<p>You can find the detailed documentation on how rendering the documentation with Sphinx works in the <a class="reference internal" href="rendering_documentation.html#rendering-documentation"><span class="std std-ref">Rendering documentation locally with Sphinx</span></a> section.</p>
+<p>The documentation is pre-built during your workspace initialization. So once this task is completed, you have two main options to render the documentation in Gitpod.</p>
+<section id="option-1-using-liveserve">
+<h3>Option 1: Using Liveserve<a class="headerlink" href="#option-1-using-liveserve" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p>View the documentation in <code class="docutils literal notranslate"><span class="pre">scipy/doc/build/html</span></code>. You can start with <code class="docutils literal notranslate"><span class="pre">index.html</span></code> and browse, or you can jump straight to the file you’re interested in.</p></li>
+<li><p>To see the rendered version of a page, you can right-click on the <code class="docutils literal notranslate"><span class="pre">.html</span></code> file and click on <strong>Open with Live Serve</strong>. Alternatively, you can open the file in the editor and click on the <strong>Go live</strong> button on the status bar.</p>
+<blockquote>
+<div><img alt="Gitpod VSCode editor - status bar zoom with &quot;Go Live&quot; tab highligthed by a teal rectangle" src="../../_images/vscode-statusbar.png" />
+</div></blockquote>
+</li>
+<li><p>A simple browser will open to the right-hand side of the editor. We recommend closing it and click on the <strong>Open in browser</strong> button in the pop-up.</p></li>
+<li><p>To stop the server click on the <strong>Port: 5500</strong> button on the status bar.</p></li>
+</ol>
+</section>
+<section id="option-2-using-the-rst-extension">
+<h3>Option 2: Using the rst extension<a class="headerlink" href="#option-2-using-the-rst-extension" title="Permalink to this heading">#</a></h3>
+<p>A quick and easy way to see live changes in a <code class="docutils literal notranslate"><span class="pre">.rst</span></code> file as you work on it uses the rst extension with docutils.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This will generate a simple live preview of the document without the <code class="docutils literal notranslate"><span class="pre">html</span></code> theme, and some backlinks might not be added correctly. But it is an easy and lightweight way to get instant feedback on your work.</p>
+</div>
+<ol class="arabic">
+<li><p>Open any of the source documentation files located in <code class="docutils literal notranslate"><span class="pre">doc/source</span></code> in the editor.</p></li>
+<li><p>Open VSCode Command Palette with <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Cmd</kbd>-<kbd class="kbd docutils literal notranslate">Shift</kbd>-<kbd class="kbd docutils literal notranslate">P</kbd></kbd> in Mac or <kbd class="kbd compound docutils literal notranslate"><kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">Shift</kbd>-<kbd class="kbd docutils literal notranslate">P</kbd></kbd> in Linux and Windows. Start typing “restructured” and choose either “Open preview” or “Open preview to the Side”.</p>
+<blockquote>
+<div><img alt="Gitpod VSCode editor - command palette expanded showing autocomplete options for &quot;restruct&quot;" src="../../_images/vscode-rst.png" />
+</div></blockquote>
+</li>
+<li><p>As you work on the document, you will see a live rendering of it on the editor.</p>
+<blockquote>
+<div><img alt="Gitpod workspace - Quickstart Docker rst file opened on the left and rendered version on the right group of the editor." src="../../_images/rst-rendering.png" />
+</div></blockquote>
+</li>
+</ol>
+<p>If you want to see the final output with the <code class="docutils literal notranslate"><span class="pre">html</span></code> theme you will need to rebuild the docs with <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code> and use Live Serve as described in option 1.</p>
+</section>
+</section>
+<section id="faq-s">
+<h2>FAQ’s<a class="headerlink" href="#faq-s" title="Permalink to this heading">#</a></h2>
+<ol class="arabic">
+<li><dl class="simple">
+<dt>How long is my Gitpod workspace kept for?</dt><dd><p>Your stopped workspace will be kept for 14 days and deleted afterwards if you do not use them.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Can I come back to a previous workspace?</dt><dd><p>Yes, let’s say you stepped away for a while and you want to carry on working on your SciPy contributions. You need to visit <a class="reference external" href="https://gitpod.io/workspaces">https://gitpod.io/workspaces</a> and click on the workspace you want to spin up again. All your changes will be there as you last left them.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Can I install additional VSCode extensions?</dt><dd><p>Absolutely! Any extensions you installed will be installed in your own workspace and preserved.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>I registered on Gitpod but I still cannot see a <strong>Gitpod</strong> button in my repositories</dt><dd><p>Head to <a class="reference external" href="https://gitpod.io/integrations">https://gitpod.io/integrations</a> and make sure you are logged in. Hover over GitHub and click on the three buttons that appear on the right. Click on edit permissions and make sure you have <code class="docutils literal notranslate"><span class="pre">user:email</span></code>, <code class="docutils literal notranslate"><span class="pre">read:user</span></code>, and <code class="docutils literal notranslate"><span class="pre">public_repo</span></code> checked.
+Click on <strong>Update Permissions</strong> and confirm the changes in the GitHub application page.</p>
+<img alt="Gitpod dashboard integrations section - edit GitHub permissions dropdown expanded" src="../../_images/gitpod-edit-permissions-gh.png" />
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>How long does my workspace stay active if I’m not using it?</dt><dd><p>If you keep your workspace open in a browser tab but don’t interact with it, it will shut down after 30 minutes. If you close the browser tab, it will shut down after 3 minutes.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2008-2023, The SciPy community.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>
